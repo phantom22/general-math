@@ -1,0 +1,36 @@
+type Vector3 = [number,number,number];
+const  Vec3 = (x:number, y:number, z:number): Vector3 => {
+    let v = <Vector3>[x,y,z];
+    v.toString = () => `Vector3(${v[0]},${v[1]},${v[2]})`;
+    return v;
+}
+Vec3.up = <Vector3>[0,1,0];
+Vec3.down = <Vector3>[0,-1,0];
+Vec3.left = <Vector3>[-1,0,0];
+Vec3.right = <Vector3>[1,0,0];
+Vec3.forward = <Vector3>[0,0,1];
+Vec3.back = <Vector3>[0,0,-1];
+Vec3.one = <Vector3>[1,1,0];
+Vec3.zero = <Vector3>[0,0,0];
+Vec3.equals = (a:Vector3, b:Vector3) => a===b;
+Vec3.compare = (a:Vector3, b:Vector3) => a[0]===b[0] && a[1]===b[1] && a[2]===b[2];
+Vec3.isNaN = (v:Vector3) => Number.isNaN(v[0]) || Number.isNaN(v[1]) || Number.isNaN(v[2]);
+Vec3.repair = (v:Vector3, d=0): Vector3 => [v[0]||d, v[1]||d, v[2]||d];
+Vec3.clone = (v:Vector3): Vector3 => [...v];
+Vec3.add = (a:Vector3, b:Vector3): Vector3 => [a[0]+b[0], a[1]+b[1], a[2]+b[2]];
+Vec3.sub = (a:Vector3, b:Vector3): Vector3 => [a[0]-b[0], a[1]-b[1], a[2]-b[2]];
+Vec3.mul = (v:Vector3, s:number): Vector3 => [v[0]*s, v[1]*s, v[2]*s];
+Vec3.dot = (a:Vector3, b:Vector3) => a[0]*b[0]+a[1]*b[1];
+Vec3.scale = (a:Vector3, b:Vector3): Vector3 => [a[0]*b[0], a[1]*b[1], a[2]*b[2]];
+Vec3.div = (v:Vector3, s:number): Vector3 => { const t=1/s; return [v[0]*t, v[1]*t, v[2]*t] };
+Vec3.magnitude = (v:Vector3) => (v[0]**2+v[1]**2+v[2]**2)**(1/2);
+Vec3.sqrMagnitude = (v:Vector3) => v[0]**2+v[1]**2+v[2]**2;
+Vec3.normalize = (v:Vector3): Vector3 => { const t=1/Vec3.magnitude(v); return [v[0]*t, v[1]*t, v[2]*t] };
+Vec3.distance = (a:Vector3, b:Vector3) => ((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2)**(1/2);
+Vec3.angle = (a:Vector3, b:Vector3) => Math.acos(Vec3.dot(a,b) / (Vec3.magnitude(a) * Vec3.magnitude(b)));
+Vec3.clamp = (v:Vector3, x:Vector2, y:Vector2, z:Vector2): Vector3 => [Math.max(x[0], Math.min(v[0], x[1])), Math.max(y[0], Math.min(v[1], y[1])), Math.max(z[0], Math.min(v[2], z[1]))];
+Vec3.simpleClamp = (v:Vector3, min:number, max:number): Vector3 => [Math.max(min, Math.min(v[0], max)), Math.max(min, Math.min(v[1], max)), Math.max(min, Math.min(v[2], max))];
+Vec3.max = (...v:Vector3[]) => { let o=v[0]; for (let i=0;i<v.length;i++) { o[0]=v[i][0]>o[0]?v[i][0]:o[0]; o[1]=v[i][1]>o[1]?v[i][1]:o[1]; o[2]=v[i][2]>o[2]?v[i][2]:o[2] } return o };
+Vec3.min = (...v:Vector3[]) => { let o=v[0]; for (let i=0;i<v.length;i++) { o[0]=v[i][0]<o[0]?v[i][0]:o[0]; o[1]=v[i][1]<o[1]?v[i][1]:o[1]; o[2]=v[i][2]<o[2]?v[i][2]:o[2] } return o };
+Vec3.lerp = (a:Vector3, b:Vector3, t:number) => Vec3(a[0]*(1-t)+b[0]*t, a[1]*(1-t)+b[1]*t, a[2]*(1-t)+b[2]*t);
+Object.freeze(Vec3);
