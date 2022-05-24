@@ -25,19 +25,19 @@ function Mat(m, n, v = []) {
         return Mat(m - 1, n - 1, r);
     };
     o.isSquare = m === n;
-    o.extract = (newDim, sel) => {
+    o.sec2mat = (newDim, sel) => {
         let r = [];
         for (let i = 0; i < sel.length; i++) {
             r.push(o.mat[i]);
         }
         return Mat(...newDim, r);
     };
-    o.sec2sel = (...sec) => {
+    o.sec2arr = (...sec) => {
         let r = [];
         for (let i = 0; i < sec.length; i++) {
             const { start, dim } = sec[i];
-            for (let x = 0; x < dim[0]; x++) {
-                for (let y = 0; y < dim[1]; y++) {
+            for (let y = 0; y < dim[0]; y++) {
+                for (let x = 0; x < dim[1]; x++) {
                     r.push((start[1] + y) * n + (start[0] + x));
                 }
             }
@@ -58,7 +58,7 @@ function Mat(m, n, v = []) {
         const subX = m - order + 1, subY = n - order + 1;
         for (let x = 0; x < subX; x++) {
             for (let y = 0; y < subY; y++) {
-                r.push(o.sec2sel({ start: [x, y], dim: [order, order] }));
+                r.push(o.sec2arr({ start: [x, y], dim: [order, order] }));
             }
         }
         return r;

@@ -11,10 +11,10 @@ type Matrix = {
     get(x:number, y:number): number;
     set(x:number, y:number, v:number): void;
     submat(x:number, y:number): Matrix;
-    sec2sel(...sec:MatrixSection[]): number[];
+    sec2arr(...sec:MatrixSection[]): number[];
     sel2mat(newDim:Vector2, sel:number[]): Matrix;
     isSquare: boolean;
-    extract(newDim:Vector2, sel:number[][]): Matrix;
+    sec2mat(newDim:Vector2, sel:number[][]): Matrix;
     squareSubmats(order:number): number[][];
     contains(a:Matrix): boolean;
     kroneckerMats(sel:number[]): Matrix[];
@@ -60,19 +60,19 @@ function Mat(m:number, n:number, v=<number[]>[]) {
         return Mat(m-1, n-1, r);
     }
     o.isSquare = m===n;
-    o.extract = (newDim:Vector2, sel:number[][]) => {
+    o.sec2mat = (newDim:Vector2, sel:number[][]) => {
         let r=[];
         for (let i=0; i<sel.length; i++) {
             r.push(o.mat[i]);
         }
         return Mat(...newDim, r);
     }
-    o.sec2sel = (...sec:MatrixSection[]): number[] => {
+    o.sec2arr = (...sec:MatrixSection[]): number[] => {
         let r=<number[]>[];
         for (let i=0; i<sec.length; i++) {
             const {start,dim} = sec[i];
-            for (let x=0; x<dim[0]; x++) {
-                for (let y=0; y<dim[1]; y++) {
+            for (let y=0; y<dim[0]; y++) {
+                for (let x=0; x<dim[1]; x++) {
                     r.push((start[1]+y)*n+(start[0]+x));
                 }
             }
@@ -92,7 +92,7 @@ function Mat(m:number, n:number, v=<number[]>[]) {
         const subX = m-order+1, subY = n-order+1;
         for (let x=0; x<subX; x++) {
             for (let y=0; y<subY; y++) {
-                r.push(o.sec2sel({start:[x,y],dim:[order,order]}));
+                r.push(o.sec2arr({start:[x,y],dim:[order,order]}));
             }
         }
         return r;
