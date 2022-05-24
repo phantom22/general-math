@@ -1,8 +1,9 @@
 function Mat(m, n, v = []) {
     const o = {};
     o.dim = [m, n];
+    const length = m * n;
     Object.freeze(o.dim);
-    o.mat = Array(m * n).fill(0); // first fill all cells with 0
+    o.mat = Array(length).fill(0); // first fill all cells with 0
     for (let i = 0; i < v.length; i++) {
         o.mat[i] = v[i];
     }
@@ -10,21 +11,62 @@ function Mat(m, n, v = []) {
         let s = `Mat(${m},${n})`;
         return s;
     };
+    o.clone = () => Mat(m, n, o.mat);
     o.get = (x, y) => o.mat[x * n + y];
     o.set = (x, y, v) => o.mat[x * n + y] = v;
     o.submat = (x, y) => {
-        let v = [];
-        for (let i = 0; i < m * n; i++) {
-            let row = Math.floor(i / n), col = i % n;
-            if (x === row || y === col)
-                continue;
-            v.push(o.mat[row * n + col]);
+        let r = [];
+        for (let a = 0; a < m; a++) { // rows
+            for (let b = 0; b < n; b++) { // cols
+                if (a !== x && b !== y)
+                    r.push(o.mat[a * n + b]);
+            }
         }
-        return Mat(m - 1, n - 1, v);
+        return Mat(m - 1, n - 1, r);
     };
-    o.isSquared = () => m === n;
+    o.isSquare = m === n;
+    o.extract = (from, dim) => {
+        let r = [];
+        for (let x = 0; x < dim[0]; x++) {
+            for (let y = 0; y < dim[1]; y++) {
+                const f = Vec2.add(from, [x, y]);
+                r.push(o.mat[f[0] * n + f[1]]);
+            }
+        }
+        return Mat(...dim, r);
+    };
+    o.squareSubmats = (order) => {
+        let r = [];
+        if (!order || order > m || order > n)
+            throw "Invalid sub-matrix order!";
+        const subX = m - order + 1, subY = n - order + 1;
+        for (let x = 0; x < subX; x++) {
+            for (let y = 0; y < subY; y++) {
+                r.push(o.extract([x, y], [order, order]));
+            }
+        }
+        return r;
+    };
+    o.contains = (a) => {
+        let r = true;
+        for (let x = 0; x < n; x++) {
+            for (let y = 0; y < m; y++) {
+            }
+        }
+        return r;
+    };
+    o.isNull = () => {
+        let f = true;
+        for (let i = 0; i < length; i++) {
+            if (o.mat[i] !== 0) {
+                f = false;
+                break;
+            }
+        }
+        return f;
+    };
     o.det = () => {
-        if (!o.isSquared())
+        if (!o.isSquare)
             throw "Incompatible matrix!";
         else if (m === 1)
             return o.mat[0]; // a
@@ -38,7 +80,27 @@ function Mat(m, n, v = []) {
             return t;
         }
     };
-    // https://en.wikipedia.org/wiki/Transpose
+    o.rank = () => {
+        if (o.isNull())
+            return 0;
+        else {
+            let rk = Math.min(m, n);
+            for (let i = rk; i > 0; i--) {
+                const subs = o.squareSubmats(rk);
+                let validMats = []; // all mats of order n, with det !== 0
+                for (let j = 0; j < subs.length; j++) {
+                    if (subs[j].det() !== 0) {
+                        validMats.push(subs[j]);
+                        break;
+                    }
+                }
+                for (let j = 0; j < validMats.length; j++) {
+                    // const allSquareMats = o.kroneckerMats();
+                    // foreach, if allSquareMats[i].det() !== 0 => return rk;
+                }
+            }
+        }
+    };
     o.transpose = () => {
         let r = [];
         for (let x = 0; x < n; x++) {
@@ -57,51 +119,44 @@ function Mat(m, n, v = []) {
         }
         return Mat(m, n, r);
     };
-    // https://www.cuemath.com/algebra/cofactor-matrix/
-    // ovvero Aij * (-1)**(i+j)
-    // cioè cambiare solo i segni degli elementi dispari
     o.cofactors = () => {
-        const b = o.minors();
+        const r = [];
         for (let x = 0; x < n; x++) {
             for (let y = 0; y < m; y++) {
-                b.mat[x * n + y] *= (x + y) % 2 === 0 ? 1 : -1;
+                r.push(o.mat[x * n + y] * ((x + y) % 2 === 0 ? 1 : -1));
             }
         }
-        return b;
+        return Mat(m, n, r);
     };
-    // https://en.wikipedia.org/wiki/Adjugate_matrix
     o.adjugate = () => {
-        // 1. minors matrix
-        // 2. Mat.cofactor(minors matrix)
-        const b = o.cofactors();
-        // invert diagonal ?????
-        return b.transpose();
-        // 3. Mat.transpose(cofactos matrix)
+        return o.minors().cofactors().transpose();
     };
-    // https://www.youtube.com/watch?v=kWorj5BBy9k
     o.inverse = () => {
         const det = o.det(), t = o.adjugate();
         if (det === 0)
             throw "Matrix has null determinant!";
-        return Mat.mul(t, 1 / det); // qualcosa non va (segno)
+        return Mat.mul(t, 1 / det);
     };
     o.round = () => {
-        for (let i = 0; i < o.mat.length; i++) {
-            o.mat[i] = Math.round(o.mat[i]);
+        let r = [];
+        for (let i = 0; i < length; i++) {
+            r.push(Math.round(o.mat[i]));
         }
-        return o;
+        return Mat(m, n, r);
     };
     o.ceil = () => {
-        for (let i = 0; i < o.mat.length; i++) {
-            o.mat[i] = Math.ceil(o.mat[i]);
+        let r = [];
+        for (let i = 0; i < length; i++) {
+            r.push(Math.ceil(o.mat[i]));
         }
-        return o;
+        return Mat(m, n, r);
     };
     o.floor = () => {
-        for (let i = 0; i < o.mat.length; i++) {
-            o.mat[i] = Math.floor(o.mat[i]);
+        let r = [];
+        for (let i = 0; i < length; i++) {
+            r.push(Math.floor(o.mat[i]));
         }
-        return o;
+        return Mat(m, n, r);
     };
     Object.freeze(o);
     return o;
@@ -160,24 +215,3 @@ Mat.prod = (a, b) => {
     }
     return Mat(m1, n2, o);
 };
-const x = Mat(3, 2, [
-    0, 1,
-    2, 3,
-    4, 5
-]);
-const y = Mat(4, 4, [
-    1, 2, 3, 4,
-    5, 6, 10, 8,
-    9, 10, 11, 12,
-    13, 14, 15, 0
-]);
-const z = Mat(3, 3, [
-    12, 13, 2,
-    14, 15, 2,
-    1, 2, 5
-]);
-const w = Mat(2, 2, [
-    -7.5, 6.5,
-    7, -6
-]);
-//const test = Mat.inverse(y)
