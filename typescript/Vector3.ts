@@ -1,6 +1,5 @@
 /**
- * @type {Vector3}
- * @property {[number,number,number]}
+ * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
  */
 type Vector3 = [number,number,number];
 /**

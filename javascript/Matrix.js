@@ -18,6 +18,7 @@ function Mat(m, n, v = []) {
     };
     o.contains = (A) => {
         let r = true;
+        const [m, n] = A.dim;
         for (let x = 0; x < n; x++) {
             for (let y = 0; y < m; y++) {
             }
@@ -27,6 +28,29 @@ function Mat(m, n, v = []) {
     Object.freeze(o);
     return o;
 }
+Mat.equals = (A, B) => A === B;
+Mat.compare = (A, B) => {
+    let eq = true;
+    for (let i = 0; i < A.mat.length; i++) {
+        if (A.mat[i] !== B.mat[i]) {
+            eq = false;
+            break;
+        }
+    }
+    return eq;
+};
+Mat.equalDims = (A, B) => A.dim[0] === B.dim[0] && A.dim[1] === B.dim[1];
+Mat.isNull = (A) => {
+    let f = true;
+    for (let i = 0; i < length; i++) {
+        if (A.mat[i] !== 0) {
+            f = false;
+            break;
+        }
+    }
+    return f;
+};
+Mat.isSquare = (A) => A.dim[0] === A.dim[1];
 Mat.identity = (n) => {
     let o = [];
     for (let i = 0; i < n * n; i++) {
@@ -34,7 +58,6 @@ Mat.identity = (n) => {
     }
     return Mat(n, n, o);
 };
-Mat.equalDims = (A, B) => A.dim[0] === B.dim[0] && A.dim[1] === B.dim[1];
 Mat.add = (A, B) => {
     if (!Mat.equalDims(A, B))
         throw "Incompatible matrices!";
@@ -81,7 +104,6 @@ Mat.prod = (A, B) => {
     }
     return Mat(m1, n2, o);
 };
-Mat.clone = (A) => Mat(...A.dim, A.mat);
 Mat.submat = (A, cell) => {
     let r = [];
     const [m, n] = A.dim;
@@ -125,17 +147,6 @@ Mat.squareSubmats = (A, order) => {
     }
     return r;
 };
-Mat.isNull = (A) => {
-    let f = true;
-    for (let i = 0; i < length; i++) {
-        if (A.mat[i] !== 0) {
-            f = false;
-            break;
-        }
-    }
-    return f;
-};
-Mat.isSquare = (A) => A.dim[0] === A.dim[1];
 Mat.kroneckerMats = (sel) => {
     let r = [];
     // ...

@@ -1,4 +1,7 @@
 /**
+ * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
+ */
+/**
  * @module
  * Creates an immutable 2D vector.
  * @param {number} x first component.

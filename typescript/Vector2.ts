@@ -1,7 +1,5 @@
 /**
- * Representation of 2D vectors and points.
- * @type {Vector2}
- * @property {[number,number]}
+ * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
  */
 type Vector2 = [number,number];
 /**

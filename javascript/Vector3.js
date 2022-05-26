@@ -1,4 +1,7 @@
 /**
+ * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
+ */
+/**
  * @module
  * Creates an immutable 3D vector.
  * @param {number} x first component.
