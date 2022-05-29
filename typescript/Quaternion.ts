@@ -1,6 +1,3 @@
-/**
- * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
- */
 type Quaternion = [number,number,number,number];
 
 /**

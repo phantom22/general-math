@@ -1,13 +1,10 @@
-/**
- * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
- */
 type Vector2 = [number,number];
 /**
  * @module 
  * Creates an immutable 2D vector.
  * @param {number} x first component.
  * @param {number} y second component.
- * @returns  {Vector2}
+ * @returns {Vector2}
  */
 const Vec2 = (x=0, y=0): Vector2 => {
     let o = <Vector2>[x,y];

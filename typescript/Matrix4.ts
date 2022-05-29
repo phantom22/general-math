@@ -1,6 +1,3 @@
-/**
- * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
- */
 type Matrix4 = [
     number, number, number, number,
     number, number, number, number,
@@ -15,9 +12,7 @@ type Matrix4 = [
  */
 function Mat4(...v:number[]) {
     const mat = <Matrix4>Array(16).fill(0);
-
-    if (v.length > 16) throw "Too many values!";
-    for (let i=0; i<v.length; i++) {
+    for (let i=0; i<16; i++) {
         mat[i] = v[i];
     }
     Object.freeze(mat);
@@ -86,4 +81,11 @@ Mat4.prod = (M1:Matrix4, M2:Matrix4) => {
         m*A+n*E+o*I+p*M, m*B+n*F+o*J+p*N, m*C+n*G+o*K+p*O, m*D+n*H+o*L+p*P,
     )
 }
+/**
+ * Creates a scaling matrix.
+ * @param {Matrix4} M Matrix.
+ * @param {Vector3} V Vector3.
+ * @returns {Matrix4}
+ */
+Mat4.scale = (M:Matrix4, V:Vector3) => Mat4(M[0]*V[0],M[1]*V[0],M[2]*V[0],M[3]*V[0],M[4]*V[1],M[5]*V[1],M[6]*V[1],M[7]*V[1],M[8]*V[2],M[9]*V[2],M[10]*V[2],M[11]*V[2],M[12],M[13],M[14],M[15]);
 Object.freeze(Mat4);

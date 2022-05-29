@@ -1,6 +1,3 @@
-/**
- * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
- */
 type Vector3 = [number,number,number];
 /**
  * @module 
@@ -8,7 +5,7 @@ type Vector3 = [number,number,number];
  * @param {number} x first component.
  * @param {number} y second component.
  * @param {number} z third component.
- * @returns  {Vector2}
+ * @returns {Vector2}
  */
 const  Vec3 = (x=0, y=0, z=0): Vector3 => {
     let v = <Vector3>[x,y,z];

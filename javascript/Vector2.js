@@ -3,7 +3,7 @@
  * Creates an immutable 2D vector.
  * @param {number} x first component.
  * @param {number} y second component.
- * @returns  {Vector2}
+ * @returns {Vector2}
  */
 const Vec2 = (x = 0, y = 0) => {
     let o = [x, y];

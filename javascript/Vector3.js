@@ -4,7 +4,7 @@
  * @param {number} x first component.
  * @param {number} y second component.
  * @param {number} z third component.
- * @returns  {Vector2}
+ * @returns {Vector2}
  */
 const Vec3 = (x = 0, y = 0, z = 0) => {
     let v = [x, y, z];
