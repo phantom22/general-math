@@ -1,7 +1,4 @@
 /**
- * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
- */
-/**
  * @module
  * Creates an immutable 3D vector.
  * @param {number} x first component.
@@ -154,7 +151,7 @@ Vec3.angle = (a, b) => Math.acos(Vec3.dot(a, b) / (Vec3.magnitude(a) * Vec3.magn
  * @param {Vector2} y min and max for the y component.
  * @returns {Vector3}
  */
-Vec3.clamp = (v, x, y, z) => [Math.max(x[0], Math.min(v[0], x[1])), Math.max(y[0], Math.min(v[1], y[1])), Math.max(z[0], Math.min(v[2], z[1]))];
+Vec3.clamp = (v, x, y, z) => [Math.clamp(v[0], ...x), Math.clamp(v[1], ...y), Math.clamp(v[2], ...z)];
 /**
  * Returns a copy of a given vector with its components clamped between min and max.
  * @param {Vector3} v vector.
@@ -162,7 +159,7 @@ Vec3.clamp = (v, x, y, z) => [Math.max(x[0], Math.min(v[0], x[1])), Math.max(y[0
  * @param {number} max max value for both components
  * @returns {Vector3}
  */
-Vec3.simpleClamp = (v, min, max) => [Math.max(min, Math.min(v[0], max)), Math.max(min, Math.min(v[1], max)), Math.max(min, Math.min(v[2], max))];
+Vec3.simpleClamp = (v, min, max) => [Math.clamp(v[0], min, max), Math.clamp(v[1], min, max), Math.clamp(v[2], min, max),];
 /**
  * Returns a vector that is made from the largest components of all the passed vectors.
  * @param {Vector3[]} v vectors.
@@ -190,7 +187,7 @@ Vec3.min = (...v) => { let o = v[0]; for (let i = 0; i < v.length; i++) {
  * @param {number} t blend value between 0 and 1.
  * @returns {Vector3}
  */
-Vec3.lerp = (a, b, t) => Vec3(a[0] * (1 - t) + b[0] * t, a[1] * (1 - t) + b[1] * t, a[2] * (1 - t) + b[2] * t);
+Vec3.lerp = (a, b, t) => Vec3(Math.lerp(a[0], b[0], t), Math.lerp(a[1], b[1], t), Math.lerp(a[2], b[2], t));
 /**
  * Converts a Vector3 to a Vector2.
  * @param {Vector3} v

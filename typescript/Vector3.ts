@@ -155,7 +155,7 @@ Vec3.angle = (a:Vector3, b:Vector3) => Math.acos(Vec3.dot(a,b) / (Vec3.magnitude
  * @param {Vector2} y min and max for the y component.
  * @returns {Vector3}
  */
-Vec3.clamp = (v:Vector3, x:Vector2, y:Vector2, z:Vector2): Vector3 => [Math.max(x[0], Math.min(v[0], x[1])), Math.max(y[0], Math.min(v[1], y[1])), Math.max(z[0], Math.min(v[2], z[1]))];
+Vec3.clamp = (v:Vector3, x:Vector2, y:Vector2, z:Vector2): Vector3 => [Math.clamp(v[0],...x), Math.clamp(v[1],...y), Math.clamp(v[2],...z)];
 /**
  * Returns a copy of a given vector with its components clamped between min and max.
  * @param {Vector3} v vector.
@@ -163,7 +163,7 @@ Vec3.clamp = (v:Vector3, x:Vector2, y:Vector2, z:Vector2): Vector3 => [Math.max(
  * @param {number} max max value for both components
  * @returns {Vector3}
  */
-Vec3.simpleClamp = (v:Vector3, min:number, max:number): Vector3 => [Math.max(min, Math.min(v[0], max)), Math.max(min, Math.min(v[1], max)), Math.max(min, Math.min(v[2], max))];
+Vec3.simpleClamp = (v:Vector3, min:number, max:number): Vector3 => [Math.clamp(v[0],min,max), Math.clamp(v[1],min,max), Math.clamp(v[2],min,max),];
 /**
  * Returns a vector that is made from the largest components of all the passed vectors.
  * @param {Vector3[]} v vectors.
@@ -183,11 +183,11 @@ Vec3.min = (...v:Vector3[]) => { let o=v[0]; for (let i=0;i<v.length;i++) { o[0]
  * @param {number} t blend value between 0 and 1.
  * @returns {Vector3}
  */
-Vec3.lerp = (a:Vector3, b:Vector3, t:number) => Vec3(a[0]*(1-t)+b[0]*t, a[1]*(1-t)+b[1]*t, a[2]*(1-t)+b[2]*t);
+Vec3.lerp = (a:Vector3, b:Vector3, t:number) => Vec3(Math.lerp(a[0],b[0],t), Math.lerp(a[1],b[1],t), Math.lerp(a[2],b[2],t));
 /**
  * Converts a Vector3 to a Vector2.
  * @param {Vector3} v 
  * @returns {Vector2}
  */
- Vec3.toVec2 = (v:Vector3) => Vec2(v[0],v[1]);
+Vec3.toVec2 = (v:Vector3) => Vec2(v[0],v[1]);
 Object.freeze(Vec3);
