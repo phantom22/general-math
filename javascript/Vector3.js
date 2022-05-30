@@ -1,47 +1,33 @@
 /**
  * @module
- * Creates an immutable 3D vector.
+ * Creates a 3D vector.
  * @param {number} x first component.
  * @param {number} y second component.
  * @param {number} z third component.
  * @returns {Vector2}
  */
-const Vec3 = (x = 0, y = 0, z = 0) => {
-    let v = [x, y, z];
-    v.toString = () => `Vector3(${v[0]},${v[1]},${v[2]})`;
-    return v;
-};
+const Vec3 = (x = 0, y = 0, z = 0) => [x, y, z];
 /**
- * Shorthand for writing Vec3(0, 1, 0).
+ * Returns a formatted string for a given Quaternion.
+ * @param {Vector3} V vector.
+ * @returns {string}
  */
+Vec3.toString = (V) => `Vector3(${V[0]},${V[1]},${V[2]})`;
+/** Shorthand for writing Vec3(0, 1, 0). */
 Vec3.up = Vec3(0, 1, 0);
-/**
- * Shorthand for writing Vec3(0, -1, 0).
- */
+/** Shorthand for writing Vec3(0, -1, 0). */
 Vec3.down = Vec3(0, -1, 0);
-/**
- * Shorthand for writing Vec3(-1, 0, 0).
- */
+/** Shorthand for writing Vec3(-1, 0, 0). */
 Vec3.left = Vec3(-1, 0, 0);
-/**
- * Shorthand for writing Vec3(1, 0, 0).
- */
+/** Shorthand for writing Vec3(1, 0, 0). */
 Vec3.right = Vec3(1, 0, 0);
-/**
- * Shorthand for writing Vec3(0, 0, 1).
- */
+/** Shorthand for writing Vec3(0, 0, 1). */
 Vec3.forward = Vec3(0, 0, 1);
-/**
- * Shorthand for writing Vec3(0, 0, -1).
- */
+/** Shorthand for writing Vec3(0, 0, -1). */
 Vec3.back = Vec3(0, 0, -1);
-/**
- * Shorthand for writing Vec3(1, 1, 1).
- */
+/** Shorthand for writing Vec3(1, 1, 1). */
 Vec3.one = Vec3(1, 1, 1);
-/**
- * Shorthand for writing Vec3(0, 0, 0).
- */
+/** Shorthand for writing Vec3(0, 0, 0). */
 Vec3.zero = Vec3(0, 0, 0);
 /**
  * Returns true if two vectors are exactly equal.

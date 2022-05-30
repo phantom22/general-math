@@ -1,6 +1,6 @@
 /**
  * @module
- * Creates an immutable 4x4 matrix.
+ * Creates a 4x4 matrix.
  * @param {number[]} v values
  * @returns {Matrix4}
  */
@@ -9,16 +9,17 @@ function Mat4(...v) {
     for (let i = 0; i < 16; i++) {
         mat[i] = v[i];
     }
-    Object.freeze(mat);
     return mat;
 }
 /**
- * Identity matrix.
+ * Returns a formatted string for a given matrix.
+ * @param {Matrix4} M matrix.
+ * @returns {string}
  */
+Mat4.toString = (M) => `Matrix4(\n\t${M[0]},${M[1]},${M[2]},${M[3]},\n\t${M[4]},${M[5]},${M[6]},${M[7]},\n\t${M[8]},${M[9]},${M[10]},${M[11]},\n\t${M[12]},${M[13]},${M[14]},${M[15]}\n\n)`;
+/** Identity matrix. */
 Mat4.identity = Mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-/**
- * Matrix with all elements set to zero.
- */
+/** Matrix with all elements set to zero. */
 Mat4.zero = Mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 /**
  * Returns the determinant of a given matrix.

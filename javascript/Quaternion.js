@@ -1,22 +1,22 @@
 /**
- * Creates an immutable quaternion.
+ * Creates a quaternion.
  * @param {Vector3} v vector.
  * @returns {Quaternion}
  */
-function Quat(x = 0, y = 0, z = 0, w = 1) {
-    const o = [x, y, z, w];
-    Object.freeze(o);
-    return o;
-}
+const Quat = (x = 0, y = 0, z = 0, w = 1) => [x, y, z, w];
+/**
+ * Returns a formatted string for a given Quaternion.
+ * @param {Quaternion} Q Quaternion.
+ * @returns {string}
+ */
+Quat.toString = (Q) => `Quaternion(${Q[0]},${Q[1]},${Q[2]},${Q[3]})`;
 /**
  * The dot product between two rotations.
  * @param {Quaternion} A quaternion A.
  * @param {Quaternion} B quaternion B.
  * @returns {number}
  */
-Quat.dot = (A, B) => {
-    return A[0] * B[0] + A[1] * B[1] + A[2] * B[2] + A[3] * B[3];
-};
+Quat.dot = (A, B) => A[0] * B[0] + A[1] * B[1] + A[2] * B[2] + A[3] * B[3];
 /**
  * Converts angle-axis to a rotation representation.
  * @param {Vector3} axis
@@ -27,9 +27,7 @@ Quat.fromAngleAxis = (axis, angle) => {
     const hf = angle / 2, s = Math.sin(hf);
     return Quat(axis[0] * s, axis[1] * s, axis[2] * s, Math.cos(hf));
 };
-/**
- * Identity rotation.
- */
+/** Identity rotation. */
 Quat.identity = Quat(0, 0, 0, 1);
 /**
  * Returns the angle in degrees between two rotations a and b.
@@ -76,5 +74,5 @@ Quat.sqrdMagnitude = (Q) => Q[0] ** 2 + Q[1] ** 2 + Q[2] ** 2 + Q[3] ** 2;
  * @param {Quaternion} Q rotation.
  * @returns {Quaternion}
  */
-Quat.inverse = (Q) => { const m = 1 / Quat.sqrdMagnitude(Q); const q = [Q[0] * m, -Q[1] * m, -Q[2] * m, -Q[3] * m]; Object.freeze(q); return q; };
+Quat.inverse = (Q) => { const m = 1 / Quat.sqrdMagnitude(Q); return Quat(Q[0] * m, -Q[1] * m, -Q[2] * m, -Q[3] * m); };
 Object.freeze(Quat);

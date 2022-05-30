@@ -1,39 +1,28 @@
 /**
  * @module
- * Creates an immutable 2D vector.
+ * Creates a 2D vector.
  * @param {number} x first component.
  * @param {number} y second component.
  * @returns {Vector2}
  */
-const Vec2 = (x = 0, y = 0) => {
-    let o = [x, y];
-    o.toString = () => `Vector2(${o[0]},${o[1]})`;
-    Object.freeze(o);
-    return o;
-};
+const Vec2 = (x = 0, y = 0) => [x, y];
 /**
- * Shorthand for writing Vec2(0, 1).
+ * Returns a formatted string for a given vector.
+ * @param {Vector2} V vector.
+ * @returns {string}
  */
+Vec2.toString = (V) => `Vector2(${V[0]},${V[1]})`;
+/** Shorthand for writing Vec2(0, 1). */
 Vec2.up = Vec2(0, 1);
-/**
- * Shorthand for writing Vec2(0, -1).
- */
+/** Shorthand for writing Vec2(0, -1). */
 Vec2.down = Vec2(0, -1);
-/**
- *  Shorthand for writing Vec2(-1, 0).
- */
+/** Shorthand for writing Vec2(-1, 0). */
 Vec2.left = Vec2(-1, 0);
-/**
- *  Shorthand for writing Vec2(1, 0).
- */
+/** Shorthand for writing Vec2(1, 0). */
 Vec2.right = Vec2(1, 0);
-/**
- *  Shorthand for writing Vec2(1, 1).
- */
+/** Shorthand for writing Vec2(1, 1). */
 Vec2.one = Vec2(1, 1);
-/**
- *  Shorthand for writing Vec2(0, 0).
- */
+/** Shorthand for writing Vec2(0, 0). */
 Vec2.zero = Vec2(0, 0);
 /**
  * Returns true if two vectors are exactly equal.
