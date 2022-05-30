@@ -15,20 +15,28 @@ const Vec3 = (x = 0, y = 0, z = 0) => [x, y, z];
 Vec3.toString = (V) => `Vector3(${V[0]},${V[1]},${V[2]})`;
 /** Shorthand for writing Vec3(0, 1, 0). */
 Vec3.up = Vec3(0, 1, 0);
+Object.freeze(Vec3.up);
 /** Shorthand for writing Vec3(0, -1, 0). */
 Vec3.down = Vec3(0, -1, 0);
+Object.freeze(Vec3.down);
 /** Shorthand for writing Vec3(-1, 0, 0). */
 Vec3.left = Vec3(-1, 0, 0);
+Object.freeze(Vec3.left);
 /** Shorthand for writing Vec3(1, 0, 0). */
 Vec3.right = Vec3(1, 0, 0);
+Object.freeze(Vec3.right);
 /** Shorthand for writing Vec3(0, 0, 1). */
 Vec3.forward = Vec3(0, 0, 1);
+Object.freeze(Vec3.forward);
 /** Shorthand for writing Vec3(0, 0, -1). */
 Vec3.back = Vec3(0, 0, -1);
+Object.freeze(Vec3.back);
 /** Shorthand for writing Vec3(1, 1, 1). */
 Vec3.one = Vec3(1, 1, 1);
+Object.freeze(Vec3.one);
 /** Shorthand for writing Vec3(0, 0, 0). */
 Vec3.zero = Vec3(0, 0, 0);
+Object.freeze(Vec3.zero);
 /**
  * Returns true if two vectors are exactly equal.
  * @param {Vector3} a vector A.

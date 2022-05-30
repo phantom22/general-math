@@ -32,6 +32,7 @@ Quat.fromAngleAxis = (axis:Vector3, angle:number) => {
 }
 /** Identity rotation. */
 Quat.identity = Quat(0,0,0,1);
+Object.freeze(Quat.identity);
 /**
  * Returns the angle in degrees between two rotations a and b.
  * @param {Quaternion} A rotation A.

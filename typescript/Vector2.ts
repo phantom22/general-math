@@ -15,16 +15,22 @@ const Vec2 = (x=0, y=0) => <Vector2>[x,y];
 Vec2.toString = (V:Vector2) => `Vector2(${V[0]},${V[1]})`;
 /** Shorthand for writing Vec2(0, 1). */
 Vec2.up = Vec2(0,1);
+Object.freeze(Vec2.up);
 /** Shorthand for writing Vec2(0, -1). */
 Vec2.down = Vec2(0,-1);
+Object.freeze(Vec2.down);
 /** Shorthand for writing Vec2(-1, 0). */
 Vec2.left = Vec2(-1,0);
+Object.freeze(Vec2.left);
 /** Shorthand for writing Vec2(1, 0). */
 Vec2.right = Vec2(1,0);
+Object.freeze(Vec2.right);
 /** Shorthand for writing Vec2(1, 1). */
 Vec2.one = Vec2(1,1);
+Object.freeze(Vec2.one);
 /** Shorthand for writing Vec2(0, 0). */
 Vec2.zero = Vec2(0,0);
+Object.freeze(Vec2.zero);
 /**
  * Returns true if two vectors are exactly equal.
  * @param {Vector2} a vector A.

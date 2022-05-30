@@ -19,8 +19,10 @@ function Mat4(...v) {
 Mat4.toString = (M) => `Matrix4(\n\t${M[0]},${M[1]},${M[2]},${M[3]},\n\t${M[4]},${M[5]},${M[6]},${M[7]},\n\t${M[8]},${M[9]},${M[10]},${M[11]},\n\t${M[12]},${M[13]},${M[14]},${M[15]}\n\n)`;
 /** Identity matrix. */
 Mat4.identity = Mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+Object.freeze(Mat4.identity);
 /** Matrix with all elements set to zero. */
 Mat4.zero = Mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+Object.freeze(Mat4.zero);
 /**
  * Returns the determinant of a given matrix.
  * @param {Matrix4} M matrix.
