@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
         "target": "esnext",
-        "outDir": "../javascript"
+        "outFile": "../javascript/generalMath.js"
     }
 }

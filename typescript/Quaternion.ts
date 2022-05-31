@@ -1,11 +1,12 @@
-type Quaternion = [number,number,number,number];
-
 /**
  * Creates a quaternion.
- * @param {Vector3} v vector. 
+ * @param {number} x first component.
+ * @param {number} y second component.
+ * @param {number} z third component.
+ * @param {number} w forth component. 
  * @returns {Quaternion}
  */
-const Quat = (x=0, y=0, z=0, w=1) => <Quaternion>[x,y,z,w];
+const Quat = (x=0, y=0, z=0, w=1): Quaternion => [x,y,z,w];
 /**
  * Returns a formatted string for a given Quaternion.
  * @param {Quaternion} Q Quaternion.
@@ -21,20 +22,20 @@ Quat.toString = (Q:Quaternion) => `Quaternion(${Q[0]},${Q[1]},${Q[2]},${Q[3]})`;
 Quat.dot = (A:Quaternion, B:Quaternion) => A[0]*B[0]+A[1]*B[1]+A[2]*B[2]+A[3]*B[3];
 /**
  * Converts angle-axis to a rotation representation.
- * @param {Vector3} axis 
- * @param {number} angle 
+ * @param {Axis} ax axis.
+ * @param {number} an angle. 
  * @returns {Quaternion}
  */
-Quat.fromAngleAxis = (axis:Vector3, angle:number) => {
-    const hf=angle/2, s=Math.sin(hf);
-    return Quat(axis[0]*s,axis[1]*s,axis[2]*s,Math.cos(hf));
+Quat.fromAngleAxis = (ax:Axis, an:number): Quaternion => {
+    const hf=an/2, s=Math.sin(hf);
+    return [ax[0]*s,ax[1]*s,ax[2]*s,Math.cos(hf)];
 
 }
 /** Identity rotation. */
-Quat.identity = Quat(0,0,0,1);
+Quat.identity = <Quaternion>[0,0,0,1];
 Object.freeze(Quat.identity);
 /**
- * Returns the angle in degrees between two rotations a and b.
+ * Returns the angle in degrees between two rotations A and B.
  * @param {Quaternion} A rotation A.
  * @param {Quaternion} B rotation B. 
  * @returns {number}
@@ -46,7 +47,7 @@ Quat.angle = (A:Quaternion, B:Quaternion) => 2*Math.acos(Math.abs(Math.clamp(Qua
  * @param {Quaternion} B rotation B.
  * @returns {Quaternion} 
  */
-Quat.prod = (A:Quaternion, B:Quaternion) => Quat(A[0]*B[3]+A[3]*B[0]+A[1]*B[2]-A[2]*B[1],A[1]*B[3]+A[3]*B[1]+A[2]*B[2]-A[0]*B[2],A[2]*B[3]+A[3]*B[2]+A[0]*B[1]-A[1]*B[0],A[3]*B[3]+A[0]*B[0]+A[1]*B[1]-A[2]*B[2]);
+Quat.prod = (A:Quaternion, B:Quaternion): Quaternion => [A[0]*B[3]+A[3]*B[0]+A[1]*B[2]-A[2]*B[1],A[1]*B[3]+A[3]*B[1]+A[2]*B[2]-A[0]*B[2],A[2]*B[3]+A[3]*B[2]+A[0]*B[1]-A[1]*B[0],A[3]*B[3]+A[0]*B[0]+A[1]*B[1]-A[2]*B[2]];
 /**
  * Returns true if two quaternions are exactly equal.
  * @param {Quaternion} A quaternion A. 
@@ -74,9 +75,33 @@ Quat.magnitude = (Q:Quaternion) => (Q[0]**2+Q[1]**2+Q[2]**2+Q[3]**2)**(0.5);
  */
 Quat.sqrdMagnitude = (Q:Quaternion) => Q[0]**2+Q[1]**2+Q[2]**2+Q[3]**2;
 /**
- * Returns the Inverse of a given rotation.
+ * Returns the inverse of a given rotation.
  * @param {Quaternion} Q rotation.
  * @returns {Quaternion}
  */
-Quat.inverse = (Q:Quaternion) => { const m=1/Quat.sqrdMagnitude(Q); return Quat(Q[0]*m,-Q[1]*m,-Q[2]*m,-Q[3]*m) };
+Quat.inverse = (Q:Quaternion): Quaternion => { const m=1/Quat.sqrdMagnitude(Q); return [Q[0]*m,-Q[1]*m,-Q[2]*m,-Q[3]*m] };
+/**
+ * Converts a given ZYX euler to a quaternion.
+ * @param {EulerRotation} E Euler rotation. 
+ * @returns {Quaternion}
+ */
+Quat.setFromEuler = (E:EulerRotation): Quaternion => {
+    const s1=Math.sin(E[0]*0.5), s2=Math.sin(E[1]*0.5), s3=Math.sin(E[2]*0.5),
+          c1=Math.cos(E[0]*0.5), c2=Math.cos(E[1]*0.5), c3=Math.cos(E[2]*0.5);
+    return [s1*c2*c3+c1*s2*s3, c1*s2*c3-s1*c2*s3, c1*c2*s3+s1*s2*c3, c1*c2*c3-s1*s2*s3];
+}
+/**
+ * Converts a given quaternion to a ZYX euler rotation.
+ * @param {Quaternion} Q Quaternion. 
+ * @returns {EulerRotation}
+ */
+Quat.toEuler = (Q:Quaternion): EulerRotation => {
+    const a = 2*(Q[0]*Q[1]+Q[3]*Q[2]),
+          b = Q[3]*Q[3]+Q[0]*Q[0]-Q[1]*Q[1]-Q[2]*Q[2],
+          c = -2*(Q[0]*Q[2]-Q[3]*Q[1]),
+          d = 2*(Q[1]*Q[2]+Q[3]*Q[0]),
+          e = Q[3]*Q[3]-Q[0]*Q[0]-Q[1]*Q[1]+Q[3]*Q[3];
+    
+    return [Math.atan2(d,e), Math.asin(c), Math.atan2(a,b)];
+}
 Object.freeze(Quat);
