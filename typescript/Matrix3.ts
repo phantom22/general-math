@@ -105,4 +105,19 @@ Mat3.getRow = (M:Matrix4, i:number): Vector3 => {
  * @returns {Matrix3}
  */
 Mat3.toNormalMat = (M:Matrix4): Matrix3 => Mat3.transpose(Mat3.invert(Mat3.fromMat4(M)));
+/**
+ * Converts a 3x3 matrix into a 4x4 one.
+ * @param {Matrix3} M Matrix3.
+ * @returns {Matrix4}
+ */
+Mat3.toMat4 = (M:Matrix3): Matrix4 => [M[0],M[3],M[6],0,M[1],M[4],M[7],0,M[2],M[5],M[8],0,0,0,0,1];
+/**
+ * Converts a rotation matrix to ZXY euler angles.
+ * @param {Matrix3} M matrix3. 
+ * @returns {EulerRotation}
+ */
+Mat3.toEuler = (M:Matrix3): EulerRotation => {
+    const x = Math.asin(Math.clamp( M[7], - 1, 1 ));
+    return (Math.abs(M[7])<0.9999999)?[x,Math.atan2(-M[6],M[8]),Math.atan2(-M[1],M[4])]:[x,0,Math.atan2(M[3],M[0])]
+}
 Object.freeze(Mat3);

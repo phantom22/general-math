@@ -81,27 +81,16 @@ Quat.sqrdMagnitude = (Q:Quaternion) => Q[0]**2+Q[1]**2+Q[2]**2+Q[3]**2;
  */
 Quat.inverse = (Q:Quaternion): Quaternion => { const m=1/Quat.sqrdMagnitude(Q); return [Q[0]*m,-Q[1]*m,-Q[2]*m,-Q[3]*m] };
 /**
- * Converts a given ZYX euler to a quaternion.
- * @param {EulerRotation} E Euler rotation. 
- * @returns {Quaternion}
- */
-Quat.setFromEuler = (E:EulerRotation): Quaternion => {
-    const s1=Math.sin(E[0]*0.5), s2=Math.sin(E[1]*0.5), s3=Math.sin(E[2]*0.5),
-          c1=Math.cos(E[0]*0.5), c2=Math.cos(E[1]*0.5), c3=Math.cos(E[2]*0.5);
-    return [s1*c2*c3+c1*s2*s3, c1*s2*c3-s1*c2*s3, c1*c2*s3+s1*s2*c3, c1*c2*c3-s1*s2*s3];
-}
-/**
- * Converts a given quaternion to a ZYX euler rotation.
+ * Converts a given quaternion to a ZXY euler rotation.
  * @param {Quaternion} Q Quaternion. 
  * @returns {EulerRotation}
  */
 Quat.toEuler = (Q:Quaternion): EulerRotation => {
-    const a = 2*(Q[0]*Q[1]+Q[3]*Q[2]),
-          b = Q[3]*Q[3]+Q[0]*Q[0]-Q[1]*Q[1]-Q[2]*Q[2],
-          c = -2*(Q[0]*Q[2]-Q[3]*Q[1]),
-          d = 2*(Q[1]*Q[2]+Q[3]*Q[0]),
-          e = Q[3]*Q[3]-Q[0]*Q[0]-Q[1]*Q[1]+Q[3]*Q[3];
-    
-    return [Math.atan2(d,e), Math.asin(c), Math.atan2(a,b)];
+    const a = 2*(Q[3]*Q[0]+Q[1]*Q[2]),
+          b = 1 - 2*(Q[0]**2+Q[1]**2),
+          c = 2*(Q[3]*Q[1]-Q[2]*Q[0]),
+          d = 2*(Q[3]*Q[2]+Q[0]*Q[1]),
+          e = 1 - 2*(Q[1]**2+Q[2]**2);
+    return [Math.atan2(a, b),Math.abs(c)>=1?Math.PI/2*Math.sign(c):Math.asin(c),Math.atan2(d,e)];
 }
 Object.freeze(Quat);

@@ -86,12 +86,6 @@ Mat4.prod = (A:Matrix4, B:Matrix4): Matrix4 => {
  */
 Mat4.scale = (M:Matrix4, V:Vector3): Matrix4 => [M[0]*V[0],M[1]*V[0],M[2]*V[0],M[3]*V[0],M[4]*V[1],M[5]*V[1],M[6]*V[1],M[7]*V[1],M[8]*V[2],M[9]*V[2],M[10]*V[2],M[11]*V[2],M[12],M[13],M[14],M[15]];
 /**
- * Converts a 3x3 matrix into a 4x4 one.
- * @param {Matrix3} M Matrix 
- * @returns {Matrix4}
- */
-Mat4.fromMat3 = (M:Matrix3): Matrix4 => [M[0],M[3],M[6],0,M[1],M[4],M[7],0,M[2],M[5],M[8],0,0,0,0,1];
-/**
  * Get a column of the given matrix.
  * @param {Matrix4} M matrix4. 
  * @param {number} i column index.
@@ -115,7 +109,7 @@ Mat4.getRow = (M:Matrix4, i:number): Vector4 => {
  * @param {Vector3} s scale.
  * @returns {Matrix4}
  */
-Mat4.fromQuat = (p:Vector3, Q:Quaternion, s=Vec3.one): Matrix4 => {
+Mat4.compose = (p:Vector3, Q:Quaternion, s=Vec3.one): Matrix4 => {
     const [x,y,z,w] = Q,
           xx=2*x**2, yy=2*y**2, zz=2*z**2,
           xy=2*x*y, wz=2*w*z, xz=2*x*z, wy=2*w*y, yz=2*y*z, wx=2*w*x,

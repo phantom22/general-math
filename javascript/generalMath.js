@@ -1,13 +1,3 @@
-/**
- * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
- * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
- * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
- * @typedef {[number,number,number]} Axis Representation of an axis.
- * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
- * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
- * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
- * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
- */
 function Axis(x = 0, y = 0, z = 0) {
     return Vec3.normalize([x, y, z]);
 }
@@ -17,6 +7,15 @@ function Euler(x = 0, y = 0, z = 0) {
 Euler.fromRotationMat = () => 1;
 /** Roll/Pitch/Yaw angles. */
 Euler.order = "ZXY";
+/**
+ * Converts a given ZYX euler rotation to a quaternion.
+ * @param {EulerRotation} E Euler rotation.
+ * @returns {Quaternion}
+ */
+Euler.toQuat = (E) => {
+    const s1 = Math.sin(E[0] * 0.5), s2 = Math.sin(E[1] * 0.5), s3 = Math.sin(E[2] * 0.5), c1 = Math.cos(E[0] * 0.5), c2 = Math.cos(E[1] * 0.5), c3 = Math.cos(E[2] * 0.5);
+    return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
+};
 Object.freeze(Euler.order);
 // https://docs.unity3d.com/Packages/com.unity.tiny@0.13/rt/tiny_runtime/classes/_runtimefull_.utmath.matrix3.html
 const Mat3 = (...v) => {
@@ -328,15 +327,6 @@ Quat.sqrdMagnitude = (Q) => Q[0] ** 2 + Q[1] ** 2 + Q[2] ** 2 + Q[3] ** 2;
  * @returns {Quaternion}
  */
 Quat.inverse = (Q) => { const m = 1 / Quat.sqrdMagnitude(Q); return [Q[0] * m, -Q[1] * m, -Q[2] * m, -Q[3] * m]; };
-/**
- * Converts a given ZYX euler to a quaternion.
- * @param {EulerRotation} E Euler rotation.
- * @returns {Quaternion}
- */
-Quat.setFromEuler = (E) => {
-    const s1 = Math.sin(E[0] * 0.5), s2 = Math.sin(E[1] * 0.5), s3 = Math.sin(E[2] * 0.5), c1 = Math.cos(E[0] * 0.5), c2 = Math.cos(E[1] * 0.5), c3 = Math.cos(E[2] * 0.5);
-    return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
-};
 /**
  * Converts a given quaternion to a ZYX euler rotation.
  * @param {Quaternion} Q Quaternion.
