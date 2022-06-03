@@ -30,6 +30,15 @@ Euler.toQuat = (E) => {
 };
 /** Roll/Pitch/Yaw angles. */
 Euler.order = "ZXY";
+/**
+ * Converts a given ZYX euler rotation to a quaternion.
+ * @param {EulerRotation} E Euler rotation.
+ * @returns {Quaternion}
+ */
+Euler.toQuat = (E) => {
+    const s1 = Math.sin(E[0] * 0.5), s2 = Math.sin(E[1] * 0.5), s3 = Math.sin(E[2] * 0.5), c1 = Math.cos(E[0] * 0.5), c2 = Math.cos(E[1] * 0.5), c3 = Math.cos(E[2] * 0.5);
+    return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
+};
 Object.freeze(Euler.order);
 // https://docs.unity3d.com/Packages/com.unity.tiny@0.13/rt/tiny_runtime/classes/_runtimefull_.utmath.matrix3.html
 const Mat3 = (...v) => {
