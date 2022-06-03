@@ -1,14 +1,4 @@
 /**
- * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
- * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
- * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
- * @typedef {[number,number,number]} Axis Representation of an axis.
- * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
- * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
- * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
- * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
- */
-/**
  * Creates a 3d axis.
  * @param {number} x first component.
  * @param {number} y second component.
@@ -147,10 +137,10 @@ Mat3.getRow = (M, i) => {
 };
 /**
  * Returns the normal matrix of a given matrix.
- * @param {Matrix4} M matrix4.
+ * @param {Matrix3} M matrix3.
  * @returns {Matrix3}
  */
-Mat3.toNormalMat = (M) => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
+Mat3.toNormalMat = (M) => Mat3.transpose(Mat3.invert(M));
 /**
  * Converts a rotation matrix3 to ZXY euler angles (radians).
  * @param {Matrix3} M rotation matrix3.
@@ -164,7 +154,7 @@ Mat3.toEuler = (M) => {
 };
 /**
  * Converts a 3x3 matrix into a 4x4 one.
- * @param {Matrix3} M Matrix
+ * @param {Matrix3} M matrix3.
  * @returns {Matrix4}
  */
 Mat3.toMat4 = (M) => [M[0], M[3], M[6], 0, M[1], M[4], M[7], 0, M[2], M[5], M[8], 0, 0, 0, 0, 1];
@@ -302,6 +292,12 @@ Mat4.toEuler = (M) => {
  * @returns {Matrix3}
  */
 Mat4.toMat3 = (M) => [M[0], M[4], M[8], M[1], M[5], M[9], M[2], M[6], M[10]];
+/**
+ * Returns the normal matrix of a given matrix.
+ * @param {Matrix4} M matrix4.
+ * @returns {Matrix3}
+ */
+Mat4.toNormalMat = (M) => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
 Object.freeze(Mat4);
 /**
  * Creates a quaternion.
@@ -614,6 +610,30 @@ Vec2.toVec3 = (V) => [...V, 0];
  * @returns {Vector4}
  */
 Vec2.toVec4 = (V) => [...V, 0, 0];
+/**
+ * Returns a copy of the vector with all of its components rounded to nearest integer.
+ * @param {Vector2} V vector2.
+ * @returns {Vector2}
+ */
+Vec2.round = (V) => [Math.round(V[0]), Math.round(V[1])];
+/**
+ * Returns a copy of the vector with all of its components rounded to the largest integer less than or equal to a given number.
+ * @param {Vector2} V vector2.
+ * @returns {Vector2}
+ */
+Vec2.floor = (V) => [Math.floor(V[0]), Math.floor(V[1])];
+/**
+ * Returns a copy of the vector with all of its components rounded to the largest integer higher than or equal to a given number.
+ * @param {Vector2} V vector2.
+ * @returns {Vector2}
+ */
+Vec2.ceil = (V) => [Math.ceil(V[0]), Math.ceil(V[1])];
+/**
+ * Returns a copy of the vector with all of its components converted to their absolute values.
+ * @param {Vector2} V vector2.
+ * @returns {Vector2}
+ */
+Vec2.abs = (V) => [Math.abs(V[0]), Math.abs(V[1])];
 Object.freeze(Vec2);
 /**
  * @module
@@ -819,6 +839,30 @@ Vec3.toVec2 = (V) => [V[0], V[1]];
  * @returns {Vector4}
  */
 Vec3.toVec4 = (V) => [...V, 0];
+/**
+ * Returns a copy of the vector with all of its components rounded to nearest integer.
+ * @param {Vector3} V vector3.
+ * @returns {Vector3}
+ */
+Vec3.round = (V) => [Math.round(V[0]), Math.round(V[1]), Math.round(V[2])];
+/**
+ * Returns a copy of the vector with all of its components rounded to the largest integer less than or equal to a given number.
+ * @param {Vector3} V vector3.
+ * @returns {Vector3}
+ */
+Vec3.floor = (V) => [Math.floor(V[0]), Math.floor(V[1]), Math.floor(V[2])];
+/**
+ * Returns a copy of the vector with all of its components rounded to the largest integer higher than or equal to a given number.
+ * @param {Vector3} V vector3.
+ * @returns {Vector3}
+ */
+Vec3.ceil = (V) => [Math.ceil(V[0]), Math.ceil(V[1]), Math.ceil(V[2])];
+/**
+ * Returns a copy of the vector with all of its components converted to their absolute values.
+ * @param {Vector3} V vector3.
+ * @returns {Vector3}
+ */
+Vec3.abs = (V) => [Math.abs(V[0]), Math.abs(V[1]), Math.abs(V[2])];
 Object.freeze(Vec3);
 /**
  * @module
@@ -1027,7 +1071,36 @@ Vec4.toVec2 = (V) => [V[0], V[1]];
  * @returns {Vector3}
  */
 Vec4.toVec3 = (V) => [V[0], V[1], V[2]];
+/**
+ * Returns a copy of the vector with all of its components rounded to nearest integer.
+ * @param {Vector4} V vector4.
+ * @returns {Vector4}
+ */
+Vec4.round = (V) => [Math.round(V[0]), Math.round(V[1]), Math.round(V[2]), Math.round(V[3])];
+/**
+ * Returns a copy of the vector with all of its components rounded to the largest integer less than or equal to a given number.
+ * @param {Vector4} V vector4.
+ * @returns {Vector4}
+ */
+Vec4.floor = (V) => [Math.floor(V[0]), Math.floor(V[1]), Math.floor(V[2]), Math.floor(V[3])];
+/**
+ * Returns a copy of the vector with all of its components rounded to the largest integer higher than or equal to a given number.
+ * @param {Vector4} V vector4.
+ * @returns {Vector4}
+ */
+Vec4.ceil = (V) => [Math.ceil(V[0]), Math.ceil(V[1]), Math.ceil(V[2]), Math.ceil(V[3])];
+/**
+ * Returns a copy of the vector with all of its components converted to their absolute values.
+ * @param {Vector4} V vector4.
+ * @returns {Vector4}
+ */
+Vec4.abs = (V) => [Math.abs(V[0]), Math.abs(V[1]), Math.abs(V[2]), Math.abs(V[3])];
 Object.freeze(Vec3);
+/**
+ * Returns the factorial of a number.
+ * @param {number} n number
+ * @returns {number}
+ */
 Math.factorial = (n) => {
     let sum = 1;
     while (n > 0) {
@@ -1036,6 +1109,31 @@ Math.factorial = (n) => {
     }
     return sum;
 };
+/**
+ * Clamps a value between min and max.
+ * @param {number} v value.
+ * @param {number} m min value.
+ * @param {number} M max value.
+ * @returns {number}
+ */
 Math.clamp = (v, m, M) => Math.max(m, Math.min(v, M));
+/**
+ * Linearly interpolates between A and B by t.
+ * @param {number} a value A.
+ * @param {number} b value B.
+ * @param {number} t blend value (between 0 and 1).
+ * @returns {number}
+ */
 Math.lerp = (a, b, t) => { t = Math.clamp(t, 0, 1); return a * (1 - t) + b * t; };
+/**
+ * Linearly interpolates between A and B by t.
+ * @param {number} a value A.
+ * @param {number} b value B.
+ * @param {number} t blend value.
+ * @returns {number}
+ */
 Math.lerpUnclamped = (a, b, t) => a * (1 - t) + b * t;
+/** Constant for easy conversion from degrees to radians. */
+Math.deg2rad = 1 / 180 * Math.PI;
+/** Constant for easy conversion from radians to degrees. */
+Math.rad2deg = 1 / Math.PI * 180;

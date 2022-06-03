@@ -194,4 +194,28 @@ Vec3.toVec2 = (V:Vector3): Vector2 => [V[0],V[1]];
  * @returns {Vector4}
  */
 Vec3.toVec4 = (V:Vector3): Vector4 => [...V,0];
+/**
+ * Returns a copy of the vector with all of its components rounded to nearest integer.
+ * @param {Vector3} V vector3. 
+ * @returns {Vector3}
+ */
+Vec3.round = (V:Vector3): Vector3 => [Math.round(V[0]),Math.round(V[1]),Math.round(V[2])];
+ /**
+  * Returns a copy of the vector with all of its components rounded to the largest integer less than or equal to a given number.
+  * @param {Vector3} V vector3. 
+  * @returns {Vector3}
+  */
+Vec3.floor = (V:Vector3): Vector3 => [Math.floor(V[0]),Math.floor(V[1]),Math.floor(V[2])];
+ /**
+  * Returns a copy of the vector with all of its components rounded to the largest integer higher than or equal to a given number.
+  * @param {Vector3} V vector3. 
+  * @returns {Vector3}
+  */
+Vec3.ceil = (V:Vector3): Vector3 => [Math.ceil(V[0]),Math.ceil(V[1]),Math.ceil(V[2])];
+ /**
+  * Returns a copy of the vector with all of its components converted to their absolute values.
+  * @param {Vector3} V vector3. 
+  * @returns {Vector3}
+  */
+Vec3.abs = (V:Vector3): Vector3 => [Math.abs(V[0]),Math.abs(V[1]),Math.abs(V[2])];
 Object.freeze(Vec3);

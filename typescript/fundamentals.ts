@@ -30,8 +30,14 @@ interface Math {
     clamp(v:number, min:number, max:number): number;
     lerp(a:number, b:number, t:number): number;
     lerpUnclamped(a:number, b:number, t:number): number;
+    deg2rad:number;
+    rad2deg:number;
 }
-
+/**
+ * Returns the factorial of a number.
+ * @param {number} n number 
+ * @returns {number}
+ */
 Math.factorial = (n:number) => {
     let sum=1;
     while (n > 0) {
@@ -40,7 +46,31 @@ Math.factorial = (n:number) => {
     }
     return sum
 }
-
+/**
+ * Clamps a value between min and max.
+ * @param {number} v value. 
+ * @param {number} m min value. 
+ * @param {number} M max value. 
+ * @returns {number}
+ */
 Math.clamp = (v:number, m:number, M:number) => Math.max(m, Math.min(v, M));
+/**
+ * Linearly interpolates between A and B by t.
+ * @param {number} a value A.
+ * @param {number} b value B.
+ * @param {number} t blend value (between 0 and 1). 
+ * @returns {number}
+ */
 Math.lerp = (a:number, b:number, t:number) => { t=Math.clamp(t,0,1); return a*(1-t)+b*t };
+/**
+ * Linearly interpolates between A and B by t.
+ * @param {number} a value A.
+ * @param {number} b value B.
+ * @param {number} t blend value. 
+ * @returns {number}
+ */
 Math.lerpUnclamped = (a:number, b:number, t:number) => a*(1-t)+b*t;
+/** Constant for easy conversion from degrees to radians. */
+Math.deg2rad = 1/180*Math.PI;
+/** Constant for easy conversion from radians to degrees. */
+Math.rad2deg = 1/Math.PI*180;
