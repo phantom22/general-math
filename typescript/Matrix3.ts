@@ -77,12 +77,6 @@ Mat3.prod = (A:Matrix3, B:Matrix3): Matrix3 => {
  */
 Mat3.scale = (M:Matrix3, V:Vector2) => [M[0]*V[0],M[1]*V[0],M[2]*V[0],M[3]*V[1],M[4]*V[1],M[5]*V[1],M[6],M[7],M[8]];
 /**
- * Converts a 4x4 matrix into a 3x3 one.
- * @param {Matrix4} M matrix4.
- * @returns {Matrix3}
- */
-Mat3.fromMat4 = (M:Matrix4): Matrix3 => [M[0],M[4],M[8],M[1],M[5],M[9],M[2],M[6],M[10]];
-/**
  * Get a column of the given matrix.
  * @param {Matrix3} M matrix3. 
  * @param {number} i column index.
@@ -104,5 +98,22 @@ Mat3.getRow = (M:Matrix4, i:number): Vector3 => {
  * @param {Matrix4} M matrix4. 
  * @returns {Matrix3}
  */
-Mat3.toNormalMat = (M:Matrix4): Matrix3 => Mat3.transpose(Mat3.invert(Mat3.fromMat4(M)));
+Mat3.toNormalMat = (M:Matrix4): Matrix3 => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
+/**
+ * Converts a rotation matrix3 to ZXY euler angles (radians).
+ * @param {Matrix3} M rotation matrix3. 
+ * @returns {EulerRotation}
+ */
+Mat3.toEuler = (M:Matrix3): EulerRotation => {
+    const x = Math.asin(Math.clamp(M[7],-1,1));
+    return (Math.abs(M[7])<0.9999999) 
+                ? [x,Math.atan2(-M[6],M[8]),Math.atan2(-M[1],M[4])]
+                : [x,0,Math.atan2(M[3],M[1])];
+};
+/**
+ * Converts a 3x3 matrix into a 4x4 one.
+ * @param {Matrix3} M Matrix 
+ * @returns {Matrix4}
+ */
+Mat3.toMat4 = (M:Matrix3): Matrix4 => [M[0],M[3],M[6],0,M[1],M[4],M[7],0,M[2],M[5],M[8],0,0,0,0,1];
 Object.freeze(Mat3);

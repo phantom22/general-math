@@ -1,20 +1,33 @@
-/**
- * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
- * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
- * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
- * @typedef {[number,number,number]} Axis Representation of an axis.
- * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
- * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
- * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
- * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
- */
 function Axis(x = 0, y = 0, z = 0) {
     return Vec3.normalize([x, y, z]);
 }
-function Euler(x = 0, y = 0, z = 0) {
-    return [x, y, z];
-}
-Euler.fromRotationMat = () => 1;
+/**
+ * Converts angle-axis to a rotation representation.
+ * @param {Axis} ax axis.
+ * @param {number} an angle.
+ * @returns {Quaternion}
+ */
+Axis.toQuat = (ax, an) => {
+    const hf = an / 2, s = Math.sin(hf);
+    return [ax[0] * s, ax[1] * s, ax[2] * s, Math.cos(hf)];
+};
+/**
+ * Creates a Vector3 containing the euler angles.
+ * @param x rotation around x axis.
+ * @param y rotation around y axis.
+ * @param z rotation around z axis.
+ * @returns {EulerRotation}
+ */
+const Euler = (x = 0, y = 0, z = 0) => [x, y, z];
+/**
+ * Converts a given ZYX euler rotation to a quaternion.
+ * @param {EulerRotation} E Euler rotation.
+ * @returns {Quaternion}
+ */
+Euler.toQuat = (E) => {
+    const s1 = Math.sin(E[0] * 0.5), s2 = Math.sin(E[1] * 0.5), s3 = Math.sin(E[2] * 0.5), c1 = Math.cos(E[0] * 0.5), c2 = Math.cos(E[1] * 0.5), c3 = Math.cos(E[2] * 0.5);
+    return [s1 * c2 * c3 - c1 * s2 * s3, c1 * s2 * c3 + s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
+};
 /** Roll/Pitch/Yaw angles. */
 Euler.order = "ZXY";
 Object.freeze(Euler.order);
@@ -95,12 +108,6 @@ Mat3.prod = (A, B) => {
  */
 Mat3.scale = (M, V) => [M[0] * V[0], M[1] * V[0], M[2] * V[0], M[3] * V[1], M[4] * V[1], M[5] * V[1], M[6], M[7], M[8]];
 /**
- * Converts a 4x4 matrix into a 3x3 one.
- * @param {Matrix4} M matrix4.
- * @returns {Matrix3}
- */
-Mat3.fromMat4 = (M) => [M[0], M[4], M[8], M[1], M[5], M[9], M[2], M[6], M[10]];
-/**
  * Get a column of the given matrix.
  * @param {Matrix3} M matrix3.
  * @param {number} i column index.
@@ -122,7 +129,24 @@ Mat3.getRow = (M, i) => {
  * @param {Matrix4} M matrix4.
  * @returns {Matrix3}
  */
-Mat3.toNormalMat = (M) => Mat3.transpose(Mat3.invert(Mat3.fromMat4(M)));
+Mat3.toNormalMat = (M) => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
+/**
+ * Converts a rotation matrix3 to ZXY euler angles (radians).
+ * @param {Matrix3} M rotation matrix3.
+ * @returns {EulerRotation}
+ */
+Mat3.toEuler = (M) => {
+    const x = Math.asin(Math.clamp(M[7], -1, 1));
+    return (Math.abs(M[7]) < 0.9999999)
+        ? [x, Math.atan2(-M[6], M[8]), Math.atan2(-M[1], M[4])]
+        : [x, 0, Math.atan2(M[3], M[1])];
+};
+/**
+ * Converts a 3x3 matrix into a 4x4 one.
+ * @param {Matrix3} M Matrix
+ * @returns {Matrix4}
+ */
+Mat3.toMat4 = (M) => [M[0], M[3], M[6], 0, M[1], M[4], M[7], 0, M[2], M[5], M[8], 0, 0, 0, 0, 1];
 Object.freeze(Mat3);
 /**
  * @module
@@ -208,12 +232,6 @@ Mat4.prod = (A, B) => {
  */
 Mat4.scale = (M, V) => [M[0] * V[0], M[1] * V[0], M[2] * V[0], M[3] * V[0], M[4] * V[1], M[5] * V[1], M[6] * V[1], M[7] * V[1], M[8] * V[2], M[9] * V[2], M[10] * V[2], M[11] * V[2], M[12], M[13], M[14], M[15]];
 /**
- * Converts a 3x3 matrix into a 4x4 one.
- * @param {Matrix3} M Matrix
- * @returns {Matrix4}
- */
-Mat4.fromMat3 = (M) => [M[0], M[3], M[6], 0, M[1], M[4], M[7], 0, M[2], M[5], M[8], 0, 0, 0, 0, 1];
-/**
  * Get a column of the given matrix.
  * @param {Matrix4} M matrix4.
  * @param {number} i column index.
@@ -237,15 +255,32 @@ Mat4.getRow = (M, i) => {
  * @param {Vector3} s scale.
  * @returns {Matrix4}
  */
-Mat4.fromQuat = (p, Q, s = Vec3.one) => {
+Mat4.compose = (p, Q, s) => {
     const [x, y, z, w] = Q, xx = 2 * x ** 2, yy = 2 * y ** 2, zz = 2 * z ** 2, xy = 2 * x * y, wz = 2 * w * z, xz = 2 * x * z, wy = 2 * w * y, yz = 2 * y * z, wx = 2 * w * x, [sx, sy, sz] = s;
     return [
         (1 - yy - zz) * sx, (xy + wz) * sx, (xz - wy) * sx, 0,
-        (xy - wz) * sy, (1 - xx - zz) * sy, (yz + wx) * sz, 0,
+        (xy - wz) * sy, (1 - xx - zz) * sy, (yz + wx) * sy, 0,
         (xz + wy) * sz, (yz - wx) * sz, (1 - xx - yy) * sz, 0,
         ...p, 1
     ];
 };
+/**
+ * Converts a rotation matrix4 to ZXY euler angles (radians).
+ * @param {Matrix4} M rotation matrix4.
+ * @returns {EulerRotation}
+ */
+Mat4.toEuler = (M) => {
+    const x = Math.asin(Math.clamp(M[6], -1, 1));
+    return (Math.abs(M[6]) < 0.9999999)
+        ? [x, Math.atan2(-M[2], M[10]), Math.atan2(-M[4], M[5])]
+        : [x, 0, Math.atan2(M[1], M[0])];
+};
+/**
+ * Converts a 4x4 matrix into a 3x3 one.
+ * @param {Matrix4} M matrix4.
+ * @returns {Matrix3}
+ */
+Mat4.toMat3 = (M) => [M[0], M[4], M[8], M[1], M[5], M[9], M[2], M[6], M[10]];
 Object.freeze(Mat4);
 /**
  * Creates a quaternion.
@@ -269,16 +304,6 @@ Quat.toString = (Q) => `Quaternion(${Q[0]},${Q[1]},${Q[2]},${Q[3]})`;
  * @returns {number}
  */
 Quat.dot = (A, B) => A[0] * B[0] + A[1] * B[1] + A[2] * B[2] + A[3] * B[3];
-/**
- * Converts angle-axis to a rotation representation.
- * @param {Axis} ax axis.
- * @param {number} an angle.
- * @returns {Quaternion}
- */
-Quat.fromAngleAxis = (ax, an) => {
-    const hf = an / 2, s = Math.sin(hf);
-    return [ax[0] * s, ax[1] * s, ax[2] * s, Math.cos(hf)];
-};
 /** Identity rotation. */
 Quat.identity = [0, 0, 0, 1];
 Object.freeze(Quat.identity);
@@ -306,7 +331,7 @@ Quat.equals = (A, B) => A === B;
 /**
  * Returns true if two quaternions are approximately equal.
  * @param {Quaternion} A quaternion A.
- * @param {Quaternion} B quaternion B.
+ * @param {Quaternion} B quaternion B.tt7uj
  * @returns {boolean}
  */
 Quat.compare = (A, B) => A[0] === B[0] && A[1] === B[1] && A[2] === B[2] && A[3] === B[3];
@@ -329,23 +354,50 @@ Quat.sqrdMagnitude = (Q) => Q[0] ** 2 + Q[1] ** 2 + Q[2] ** 2 + Q[3] ** 2;
  */
 Quat.inverse = (Q) => { const m = 1 / Quat.sqrdMagnitude(Q); return [Q[0] * m, -Q[1] * m, -Q[2] * m, -Q[3] * m]; };
 /**
- * Converts a given ZYX euler to a quaternion.
- * @param {EulerRotation} E Euler rotation.
- * @returns {Quaternion}
- */
-Quat.setFromEuler = (E) => {
-    const s1 = Math.sin(E[0] * 0.5), s2 = Math.sin(E[1] * 0.5), s3 = Math.sin(E[2] * 0.5), c1 = Math.cos(E[0] * 0.5), c2 = Math.cos(E[1] * 0.5), c3 = Math.cos(E[2] * 0.5);
-    return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
-};
-/**
  * Converts a given quaternion to a ZYX euler rotation.
  * @param {Quaternion} Q Quaternion.
  * @returns {EulerRotation}
  */
 Quat.toEuler = (Q) => {
-    const a = 2 * (Q[0] * Q[1] + Q[3] * Q[2]), b = Q[3] * Q[3] + Q[0] * Q[0] - Q[1] * Q[1] - Q[2] * Q[2], c = -2 * (Q[0] * Q[2] - Q[3] * Q[1]), d = 2 * (Q[1] * Q[2] + Q[3] * Q[0]), e = Q[3] * Q[3] - Q[0] * Q[0] - Q[1] * Q[1] + Q[3] * Q[3];
-    return [Math.atan2(d, e), Math.asin(c), Math.atan2(a, b)];
+    const A = (Math.acos(Q[3]) * 2) / 180 * Math.PI, c = 1 - Math.cos(A), s1 = Math.sin(A) ** 2 + Math.sin(A), s2 = Math.sin(A) ** 2 - Math.sin(A);
+    const y = Math.asin(Math.clamp((s2 * (Q[0] * Q[2] - Q[2])), -1, 1));
+    return (Math.abs(y) < 0.9999999)
+        ? [Math.atan2(s1 * (Q[1] * Q[2] + Q[2]), 1 + (-(Q[0] ** 2) - (Q[1] ** 2)) * c), y, Math.atan2(s1 * (Q[0] * Q[1] - Q[2]), 1 + (-(Q[1] ** 2) - (Q[2] ** 2)) * c)]
+        : [0, y, Math.atan2(-s2 * (Q[0] * Q[1] - Q[2]), 1 + (-(Q[0] ** 2) - (Q[2] ** 2)) * c)];
 };
+/**
+ * Converts a quaternion into a rotation matrix4.
+ * @param {Quaternion} Q quaternion.
+ * @returns {Matrix4}
+ */
+Quat.toMat4 = (Q) => {
+    const [x, y, z, w] = Q, xx = 2 * x ** 2, yy = 2 * y ** 2, zz = 2 * z ** 2, xy = 2 * x * y, wz = 2 * w * z, xz = 2 * x * z, wy = 2 * w * y, yz = 2 * y * z, wx = 2 * w * x;
+    return [
+        (1 - yy - zz), (xy + wz), (xz - wy), 0,
+        (xy - wz), (1 - xx - zz), (yz + wx), 0,
+        (xz + wy), (yz - wx), (1 - xx - yy), 0,
+        0, 0, 0, 1
+    ];
+};
+/**
+ * Converts a quaternion into a rotation matrix3.
+ * @param {Quaternion} Q quaternion.
+ * @returns {Matrix4}
+ */
+Quat.toMat3 = (Q) => {
+    const [x, y, z, w] = Q, xx = 2 * x ** 2, yy = 2 * y ** 2, zz = 2 * z ** 2, xy = 2 * x * y, wz = 2 * w * z, xz = 2 * x * z, wy = 2 * w * y, yz = 2 * y * z, wx = 2 * w * x;
+    return [
+        (1 - yy - zz), (xy - wz), (xz + wy),
+        (xy + wz), (1 - xx - zz), (yz - wx),
+        (xz - wy), (yz + wx), (1 - xx - yy)
+    ];
+};
+/**
+ * Converts a quaternion into ZXY euler angles.
+ * @param {Quaternion} Q
+ * @returns {EulerRotation}
+ */
+Quat.toEuler = (Q) => Mat4.toEuler(Quat.toMat4(Q));
 Object.freeze(Quat);
 /**
  * @module
