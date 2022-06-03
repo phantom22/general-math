@@ -138,4 +138,10 @@ Mat4.toEuler = (M:Matrix4): EulerRotation => {
  * @returns {Matrix3}
  */
 Mat4.toMat3 = (M:Matrix4): Matrix3 => [M[0],M[4],M[8],M[1],M[5],M[9],M[2],M[6],M[10]];
+/**
+ * Returns the normal matrix of a given matrix.
+ * @param {Matrix4} M matrix4. 
+ * @returns {Matrix3}
+ */
+Mat4.toNormalMat = (M:Matrix4): Matrix3 => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
 Object.freeze(Mat4);

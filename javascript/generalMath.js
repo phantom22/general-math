@@ -1,16 +1,33 @@
-function Axis(x = 0, y = 0, z = 0) {
-    return Vec3.normalize([x, y, z]);
-}
+/**
+ * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
+ * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
+ * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
+ * @typedef {[number,number,number]} Axis Representation of an axis.
+ * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
+ * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
+ * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
+ * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
+ */
+/**
+ * Creates a 3d axis.
+ * @param {number} x first component.
+ * @param {number} y second component.
+ * @param {number} z third component.
+ * @returns
+ */
+const Ax = (x = 0, y = 0, z = 0) => Vec3.normalize([x, y, z]);
 /**
  * Converts angle-axis to a rotation representation.
- * @param {Axis} ax axis.
- * @param {number} an angle.
+ * @param {Axis} A axis.
+ * @param {number} ang angle.
  * @returns {Quaternion}
  */
-Axis.toQuat = (ax, an) => {
-    const hf = an / 2, s = Math.sin(hf);
-    return [ax[0] * s, ax[1] * s, ax[2] * s, Math.cos(hf)];
+Ax.toQuat = (A, ang) => {
+    const hf = ang / 2, s = Math.sin(hf);
+    return [A[0] * s, A[1] * s, A[2] * s, Math.cos(hf)];
 };
+Ax.toString = (A) => `Axis(${A[0]},${A[1]})`;
+Object.freeze(Ax);
 /**
  * Creates a Vector3 containing the euler angles.
  * @param x rotation around x axis.
@@ -20,26 +37,21 @@ Axis.toQuat = (ax, an) => {
  */
 const Euler = (x = 0, y = 0, z = 0) => [x, y, z];
 /**
- * Converts a given ZYX euler rotation to a quaternion.
- * @param {EulerRotation} E Euler rotation.
+ * Converts a given ZXY euler rotation to a quaternion.
+ * @param {EulerRotation} E euler rotation.
  * @returns {Quaternion}
  */
 Euler.toQuat = (E) => {
     const s1 = Math.sin(E[0] * 0.5), s2 = Math.sin(E[1] * 0.5), s3 = Math.sin(E[2] * 0.5), c1 = Math.cos(E[0] * 0.5), c2 = Math.cos(E[1] * 0.5), c3 = Math.cos(E[2] * 0.5);
     return [s1 * c2 * c3 - c1 * s2 * s3, c1 * s2 * c3 + s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
 };
-/** Roll/Pitch/Yaw angles. */
-Euler.order = "ZXY";
 /**
- * Converts a given ZYX euler rotation to a quaternion.
- * @param {EulerRotation} E Euler rotation.
- * @returns {Quaternion}
+ * Returns a formatted string for a given vector.
+ * @param {EulerRotation} E euler rotation.
+ * @returns {string}
  */
-Euler.toQuat = (E) => {
-    const s1 = Math.sin(E[0] * 0.5), s2 = Math.sin(E[1] * 0.5), s3 = Math.sin(E[2] * 0.5), c1 = Math.cos(E[0] * 0.5), c2 = Math.cos(E[1] * 0.5), c3 = Math.cos(E[2] * 0.5);
-    return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
-};
-Object.freeze(Euler.order);
+Euler.toString = (E) => `Euler<ZXY>(${E[0]}°,${E[1]}°,${E[2]}°)`;
+Object.freeze(Euler);
 // https://docs.unity3d.com/Packages/com.unity.tiny@0.13/rt/tiny_runtime/classes/_runtimefull_.utmath.matrix3.html
 const Mat3 = (...v) => {
     const mat = Array(9).fill(0);

@@ -95,10 +95,10 @@ Mat3.getRow = (M:Matrix4, i:number): Vector3 => {
 }
 /**
  * Returns the normal matrix of a given matrix.
- * @param {Matrix4} M matrix4. 
+ * @param {Matrix3} M matrix3. 
  * @returns {Matrix3}
  */
-Mat3.toNormalMat = (M:Matrix4): Matrix3 => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
+Mat3.toNormalMat = (M:Matrix3): Matrix3 => Mat3.transpose(Mat3.invert(M));
 /**
  * Converts a rotation matrix3 to ZXY euler angles (radians).
  * @param {Matrix3} M rotation matrix3. 
@@ -112,7 +112,7 @@ Mat3.toEuler = (M:Matrix3): EulerRotation => {
 };
 /**
  * Converts a 3x3 matrix into a 4x4 one.
- * @param {Matrix3} M Matrix 
+ * @param {Matrix3} M matrix3. 
  * @returns {Matrix4}
  */
 Mat3.toMat4 = (M:Matrix3): Matrix4 => [M[0],M[3],M[6],0,M[1],M[4],M[7],0,M[2],M[5],M[8],0,0,0,0,1];
