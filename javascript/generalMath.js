@@ -1,4 +1,14 @@
 /**
+ * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
+ * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
+ * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
+ * @typedef {[number,number,number]} Axis Representation of an axis.
+ * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
+ * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
+ * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
+ * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
+ */
+/**
  * Creates a 3d axis, by normalizing a vector3.
  * @param {number} x first component.
  * @param {number} y second component.
