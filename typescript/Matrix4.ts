@@ -16,7 +16,7 @@ const Mat4 = (...v:number[]) => {
  * @param {Matrix4} M matrix4.
  * @returns {string}
  */
-Mat4.toString = (M:Matrix4) => `Matrix4(\n\t${M[0]},${M[1]},${M[2]},${M[3]},\n\t${M[4]},${M[5]},${M[6]},${M[7]},\n\t${M[8]},${M[9]},${M[10]},${M[11]},\n\t${M[12]},${M[13]},${M[14]},${M[15]}\n)`;
+Mat4.toString = (M:Matrix4) => `Matrix4(\n  ${M[0]},${M[1]},${M[2]},${M[3]},\n  ${M[4]},${M[5]},${M[6]},${M[7]},\n  ${M[8]},${M[9]},${M[10]},${M[11]},\n  ${M[12]},${M[13]},${M[14]},${M[15]}\n)`;
 /** Identity matrix. */
 Mat4.identity = <Matrix4>[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
 Object.freeze(Mat4.identity);

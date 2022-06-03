@@ -1,4 +1,14 @@
 /**
+ * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
+ * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
+ * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
+ * @typedef {[number,number,number]} Axis Representation of an axis.
+ * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
+ * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
+ * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
+ * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
+ */
+/**
  * Creates a 3d axis.
  * @param {number} x first component.
  * @param {number} y second component.
@@ -16,7 +26,12 @@ Ax.toQuat = (A, ang) => {
     const hf = ang / 2, s = Math.sin(hf);
     return [A[0] * s, A[1] * s, A[2] * s, Math.cos(hf)];
 };
-Ax.toString = (A) => `Axis(${A[0]},${A[1]})`;
+/**
+ * Returns a formatted string for a given axis.
+ * @param {Axis} A axis.
+ * @returns {string}
+ */
+Ax.toString = (A) => `Axis(${A[0]},${A[1]},${A[2]})`;
 Object.freeze(Ax);
 /**
  * Creates a Vector3 containing the euler angles.
@@ -52,10 +67,10 @@ const Mat3 = (...v) => {
 };
 /**
  * Returns a formatted string for a given matrix.
- * @param {Matrix4} M matrix3.
+ * @param {Matrix3} M matrix3.
  * @returns {string}
  */
-Mat3.toString = (M) => `Matrix3(\n\t${M[0]},${M[1]},${M[2]},\n\t${M[3]},${M[4]},${M[5]},\n\t${M[6]},${M[7]},${M[8]}\n)`;
+Mat3.toString = (M) => `Matrix3(\n  ${M[0]},${M[1]},${M[2]},\n  ${M[3]},${M[4]},${M[5]},\n  ${M[6]},${M[7]},${M[8]}\n)`;
 /** Identity matrix. */
 Mat3.identity = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 Object.freeze(Mat3.identity);
@@ -86,9 +101,9 @@ Mat3.invert = (M) => {
     det = 1 / det;
     const [a, b, c, d, e, f, g, h, i] = M;
     return [
-        e * f - h * i, -b * i + c * h, b * f - c * e,
-        -d * i + f * g, a * i - c * g, -a * f + c * d,
-        d * h - e * g, -a * h + b * g, a * e - b * d
+        (e * f - h * i) * det, (-b * i + c * h) * det, (b * f - c * e) * det,
+        (-d * i + f * g) * det, (a * i - c * g) * det, (-a * f + c * d) * det,
+        (d * h - e * g) * det, (-a * h + b * g) * det, (a * e - b * d) * det
     ];
 };
 /**
@@ -177,7 +192,7 @@ const Mat4 = (...v) => {
  * @param {Matrix4} M matrix4.
  * @returns {string}
  */
-Mat4.toString = (M) => `Matrix4(\n\t${M[0]},${M[1]},${M[2]},${M[3]},\n\t${M[4]},${M[5]},${M[6]},${M[7]},\n\t${M[8]},${M[9]},${M[10]},${M[11]},\n\t${M[12]},${M[13]},${M[14]},${M[15]}\n)`;
+Mat4.toString = (M) => `Matrix4(\n  ${M[0]},${M[1]},${M[2]},${M[3]},\n  ${M[4]},${M[5]},${M[6]},${M[7]},\n  ${M[8]},${M[9]},${M[10]},${M[11]},\n  ${M[12]},${M[13]},${M[14]},${M[15]}\n)`;
 /** Identity matrix. */
 Mat4.identity = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 Object.freeze(Mat4.identity);

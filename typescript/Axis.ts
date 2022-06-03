@@ -16,5 +16,10 @@ Ax.toQuat = (A:Axis, ang:number): Quaternion => {
     const hf=ang/2, s=Math.sin(hf);
     return [A[0]*s,A[1]*s,A[2]*s,Math.cos(hf)];
 }
-Ax.toString = (A:Axis) => `Axis(${A[0]},${A[1]})`
+/**
+ * Returns a formatted string for a given axis.
+ * @param {Axis} A axis.
+ * @returns {string}
+ */
+Ax.toString = (A:Axis) => `Axis(${A[0]},${A[1]},${A[2]})`;
 Object.freeze(Ax);

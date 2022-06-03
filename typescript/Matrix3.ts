@@ -9,10 +9,10 @@ const Mat3 = (...v:number[]): Matrix3 => {
 
 /**
  * Returns a formatted string for a given matrix.
- * @param {Matrix4} M matrix3.
+ * @param {Matrix3} M matrix3.
  * @returns {string}
  */
-Mat3.toString = (M:Matrix4) => `Matrix3(\n\t${M[0]},${M[1]},${M[2]},\n\t${M[3]},${M[4]},${M[5]},\n\t${M[6]},${M[7]},${M[8]}\n)`;
+Mat3.toString = (M:Matrix3) => `Matrix3(\n  ${M[0]},${M[1]},${M[2]},\n  ${M[3]},${M[4]},${M[5]},\n  ${M[6]},${M[7]},${M[8]}\n)`;
 /** Identity matrix. */
 Mat3.identity = <Matrix3>[1,0,0,0,1,0,0,0,1];
 Object.freeze(Mat3.identity);
@@ -43,9 +43,9 @@ Mat3.invert = (M:Matrix3): Matrix3 => {
     const [a,b,c,d,e,f,g,h,i] = M;
         
     return [
-        e*f-h*i, -b*i+c*h, b*f-c*e,
-        -d*i+f*g, a*i-c*g, -a*f+c*d,
-        d*h-e*g, -a*h+b*g, a*e-b*d 
+        (e*f-h*i)*det, (-b*i+c*h)*det, (b*f-c*e)*det,
+        (-d*i+f*g)*det, (a*i-c*g)*det, (-a*f+c*d)*det,
+        (d*h-e*g)*det, (-a*h+b*g)*det, (a*e-b*d)*det
     ];
 };
 /**
