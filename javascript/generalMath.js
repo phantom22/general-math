@@ -1,15 +1,5 @@
 /**
- * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
- * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
- * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
- * @typedef {[number,number,number]} Axis Representation of an axis.
- * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
- * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
- * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
- * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
- */
-/**
- * Creates a 3d axis.
+ * Creates a 3d axis, by normalizing a vector3.
  * @param {number} x first component.
  * @param {number} y second component.
  * @param {number} z third component.
@@ -57,10 +47,14 @@ Euler.toQuat = (E) => {
  */
 Euler.toString = (E) => `Euler<ZXY>(${E[0]}°,${E[1]}°,${E[2]}°)`;
 Object.freeze(Euler);
-// https://docs.unity3d.com/Packages/com.unity.tiny@0.13/rt/tiny_runtime/classes/_runtimefull_.utmath.matrix3.html
+/**
+ * Creates a 3x3 matrix.
+ * @param {...number[]} v values.
+ * @returns
+ */
 const Mat3 = (...v) => {
     const mat = Array(9).fill(0);
-    for (let i = 0; i < Math.clamp(v.length, 0, 9); i++) {
+    for (let i = 0; i < Utils.clamp(v.length, 0, 9); i++) {
         mat[i] = v[i];
     }
     return mat;
@@ -162,13 +156,13 @@ Mat3.toNormalMat = (M) => Mat3.transpose(Mat3.invert(M));
  * @returns {EulerRotation}
  */
 Mat3.toEuler = (M) => {
-    const x = Math.asin(Math.clamp(M[7], -1, 1));
+    const x = Math.asin(Utils.clamp(M[7], -1, 1));
     return (Math.abs(M[7]) < 0.9999999)
         ? [x, Math.atan2(-M[6], M[8]), Math.atan2(-M[1], M[4])]
         : [x, 0, Math.atan2(M[3], M[1])];
 };
 /**
- * Converts a 3x3 matrix into a 4x4 one.
+ * Converts a 3x3 rotation matrix into a 4x4 one.
  * @param {Matrix3} M matrix3.
  * @returns {Matrix4}
  */
@@ -177,12 +171,12 @@ Object.freeze(Mat3);
 /**
  * @module
  * Creates a 4x4 matrix.
- * @param {number[]} v values
+ * @param {number[]} v values.
  * @returns {Matrix4}
  */
 const Mat4 = (...v) => {
     const mat = Array(16).fill(0);
-    for (let i = 0; i < Math.clamp(v.length, 0, 16); i++) {
+    for (let i = 0; i < Utils.clamp(v.length, 0, 16); i++) {
         mat[i] = v[i];
     }
     return mat;
@@ -296,7 +290,7 @@ Mat4.compose = (p, Q, s) => {
  * @returns {EulerRotation}
  */
 Mat4.toEuler = (M) => {
-    const x = Math.asin(Math.clamp(M[6], -1, 1));
+    const x = Math.asin(Utils.clamp(M[6], -1, 1));
     return (Math.abs(M[6]) < 0.9999999)
         ? [x, Math.atan2(-M[2], M[10]), Math.atan2(-M[4], M[5])]
         : [x, 0, Math.atan2(M[1], M[0])];
@@ -345,7 +339,7 @@ Object.freeze(Quat.identity);
  * @param {Quaternion} B rotation B.
  * @returns {number}
  */
-Quat.angle = (A, B) => 2 * Math.acos(Math.abs(Math.clamp(Quat.dot(A, B), -1, 1)));
+Quat.angle = (A, B) => 2 * Math.acos(Math.abs(Utils.clamp(Quat.dot(A, B), -1, 1)));
 /**
  * Combines rotations A and B.
  * @param {Quaternion} A rotation A.
@@ -392,7 +386,7 @@ Quat.inverse = (Q) => { const m = 1 / Quat.sqrdMagnitude(Q); return [Q[0] * m, -
  */
 Quat.toEuler = (Q) => {
     const A = (Math.acos(Q[3]) * 2) / 180 * Math.PI, c = 1 - Math.cos(A), s1 = Math.sin(A) ** 2 + Math.sin(A), s2 = Math.sin(A) ** 2 - Math.sin(A);
-    const y = Math.asin(Math.clamp((s2 * (Q[0] * Q[2] - Q[2])), -1, 1));
+    const y = Math.asin(Utils.clamp((s2 * (Q[0] * Q[2] - Q[2])), -1, 1));
     return (Math.abs(y) < 0.9999999)
         ? [Math.atan2(s1 * (Q[1] * Q[2] + Q[2]), 1 + (-(Q[0] ** 2) - (Q[1] ** 2)) * c), y, Math.atan2(s1 * (Q[0] * Q[1] - Q[2]), 1 + (-(Q[1] ** 2) - (Q[2] ** 2)) * c)]
         : [0, y, Math.atan2(-s2 * (Q[0] * Q[1] - Q[2]), 1 + (-(Q[0] ** 2) - (Q[2] ** 2)) * c)];
@@ -565,7 +559,7 @@ Vec2.distance = (A, B) => ((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2) ** (1 / 2);
  */
 Vec2.cross = (A, B) => [0, 0, -A[0] * B[1] + A[1] * B[0]];
 /**
- * Gets the unsigned angle in degrees between A and B.
+ * Gets the unsigned angle in radians between A and B.
  * @param {Vector2} A vector2 A.
  * @param {Vector2} B vector2 B.
  * @returns {number}
@@ -578,7 +572,7 @@ Vec2.angle = (A, B) => Math.acos(Vec2.dot(A, B) / (Vec2.magnitude(A) * Vec2.magn
  * @param {Vector2} y min and max for the y component.
  * @returns {Vector2}
  */
-Vec2.clamp = (V, x, y) => [Math.clamp(V[0], ...x), Math.clamp(V[1], ...y)];
+Vec2.clamp = (V, x, y) => [Utils.clamp(V[0], ...x), Utils.clamp(V[1], ...y)];
 /**
  * Returns a copy of a given vector with its components clamped between min and max.
  * @param {Vector2} V vector2.
@@ -586,7 +580,7 @@ Vec2.clamp = (V, x, y) => [Math.clamp(V[0], ...x), Math.clamp(V[1], ...y)];
  * @param {number} max max value for both components.
  * @returns {Vector2}
  */
-Vec2.simpleClamp = (V, min, max) => [Math.clamp(V[0], min, max), Math.clamp(V[1], min, max)];
+Vec2.simpleClamp = (V, min, max) => [Utils.clamp(V[0], min, max), Utils.clamp(V[1], min, max)];
 /**
  * Returns a vector that is made from the largest components of all the passed vectors.
  * @param {Vector2[]} V 2d vectors.
@@ -612,7 +606,7 @@ Vec2.min = (...V) => { let o = V[0]; for (let i = 0; i < V.length; i++) {
  * @param {number} t blend value between 0 and 1.
  * @returns {Vector2}
  */
-Vec2.lerp = (A, B, t) => [Math.lerp(A[0], B[0], t), Math.lerp(A[1], B[1], t)];
+Vec2.lerp = (A, B, t) => [Utils.lerp(A[0], B[0], t), Utils.lerp(A[1], B[1], t)];
 /**
  * Converts a Vector2 to Vector3.
  * @param {Vector2} V vector2.
@@ -791,7 +785,7 @@ Vec3.distance = (A, B) => ((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2 + (A[2] - B[2
  */
 Vec3.cross = (A, B) => [A[1] * B[2] - A[2] * B[1], A[0] * B[2] - A[2] * B[0], A[0] * B[1] - A[1] * B[0]];
 /**
- * Gets the unsigned angle in degrees between A and B.
+ * Gets the unsigned angle in radians between A and B.
  * @param {Vector3} A vector3 A.
  * @param {Vector3} B vector3 B.
  * @returns {number}
@@ -805,7 +799,7 @@ Vec3.angle = (A, B) => Math.acos(Vec3.dot(A, B) / (Vec3.magnitude(A) * Vec3.magn
  * @param {Vector2} z min and max for the z component.
  * @returns {Vector3}
  */
-Vec3.clamp = (V, x, y, z) => [Math.clamp(V[0], ...x), Math.clamp(V[1], ...y), Math.clamp(V[2], ...z)];
+Vec3.clamp = (V, x, y, z) => [Utils.clamp(V[0], ...x), Utils.clamp(V[1], ...y), Utils.clamp(V[2], ...z)];
 /**
  * Returns a copy of a given vector with its components clamped between min and max.
  * @param {Vector3} V vector3.
@@ -813,7 +807,7 @@ Vec3.clamp = (V, x, y, z) => [Math.clamp(V[0], ...x), Math.clamp(V[1], ...y), Ma
  * @param {number} max max value for both components.
  * @returns {Vector3}
  */
-Vec3.simpleClamp = (V, min, max) => [Math.clamp(V[0], min, max), Math.clamp(V[1], min, max), Math.clamp(V[2], min, max),];
+Vec3.simpleClamp = (V, min, max) => [Utils.clamp(V[0], min, max), Utils.clamp(V[1], min, max), Utils.clamp(V[2], min, max),];
 /**
  * Returns a vector that is made from the largest components of all the passed vectors.
  * @param {Vector3[]} V 3d vectors.
@@ -841,7 +835,7 @@ Vec3.min = (...V) => { let o = V[0]; for (let i = 0; i < V.length; i++) {
  * @param {number} t blend value between 0 and 1.
  * @returns {Vector3}
  */
-Vec3.lerp = (A, B, t) => Vec3(Math.lerp(A[0], B[0], t), Math.lerp(A[1], B[1], t), Math.lerp(A[2], B[2], t));
+Vec3.lerp = (A, B, t) => Vec3(Utils.lerp(A[0], B[0], t), Utils.lerp(A[1], B[1], t), Utils.lerp(A[2], B[2], t));
 /**
  * Converts a Vector3 to Vector2.
  * @param {Vector3} V vector3.
@@ -1020,7 +1014,7 @@ Vec4.normalize = (V) => { const t = 1 / Vec4.magnitude(V); return [V[0] * t, V[1
  */
 Vec4.distance = (A, B) => ((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2 + (A[2] - B[2]) ** 2 + (A[3] - B[3]) ** 2) ** (1 / 2);
 /**
- * Gets the unsigned angle in degrees between A and B.
+ * Gets the unsigned angle in radians between A and B.
  * @param {Vector4} A vector4 A.
  * @param {Vector4} B vector4 B.
  * @returns {number}
@@ -1035,7 +1029,7 @@ Vec4.angle = (A, B) => Math.acos(Vec4.dot(A, B) / (Vec4.magnitude(A) * Vec4.magn
  * @param {Vector2} w min and max for the w component.
  * @returns {Vector4}
  */
-Vec4.clamp = (V, x, y, z, w) => [Math.clamp(V[0], ...x), Math.clamp(V[1], ...y), Math.clamp(V[2], ...z), Math.clamp(V[3], ...w)];
+Vec4.clamp = (V, x, y, z, w) => [Utils.clamp(V[0], ...x), Utils.clamp(V[1], ...y), Utils.clamp(V[2], ...z), Utils.clamp(V[3], ...w)];
 /**
  * Returns a copy of a given vector with its components clamped between min and max.
  * @param {Vector4} V vector4.
@@ -1043,7 +1037,7 @@ Vec4.clamp = (V, x, y, z, w) => [Math.clamp(V[0], ...x), Math.clamp(V[1], ...y),
  * @param {number} max max value for both components.
  * @returns {Vector4}
  */
-Vec4.simpleClamp = (V, min, max) => [Math.clamp(V[0], min, max), Math.clamp(V[1], min, max), Math.clamp(V[2], min, max), Math.clamp(V[3], min, max)];
+Vec4.simpleClamp = (V, min, max) => [Utils.clamp(V[0], min, max), Utils.clamp(V[1], min, max), Utils.clamp(V[2], min, max), Utils.clamp(V[3], min, max)];
 /**
  * Returns a vector that is made from the largest components of all the passed vectors.
  * @param {Vector4[]} V 4d vectors.
@@ -1073,7 +1067,7 @@ Vec4.min = (...V) => { let o = V[0]; for (let i = 0; i < V.length; i++) {
  * @param {number} t blend value between 0 and 1.
  * @returns {Vector4}
  */
-Vec4.lerp = (A, B, t) => [Math.lerp(A[0], B[0], t), Math.lerp(A[1], B[1], t), Math.lerp(A[2], B[2], t), Math.lerp(A[3], B[3], t)];
+Vec4.lerp = (A, B, t) => [Utils.lerp(A[0], B[0], t), Utils.lerp(A[1], B[1], t), Utils.lerp(A[2], B[2], t), Utils.lerp(A[3], B[3], t)];
 /**
  * Converts a Vector4 to Vector2.
  * @param {Vector4} V vector4.
@@ -1112,11 +1106,16 @@ Vec4.ceil = (V) => [Math.ceil(V[0]), Math.ceil(V[1]), Math.ceil(V[2]), Math.ceil
 Vec4.abs = (V) => [Math.abs(V[0]), Math.abs(V[1]), Math.abs(V[2]), Math.abs(V[3])];
 Object.freeze(Vec3);
 /**
+ * @module
+ * A module that contains fundamental math functions.
+ */
+const Utils = () => void 0;
+/**
  * Returns the factorial of a number.
  * @param {number} n number
  * @returns {number}
  */
-Math.factorial = (n) => {
+Utils.factorial = (n) => {
     let sum = 1;
     while (n > 0) {
         sum *= n;
@@ -1131,15 +1130,15 @@ Math.factorial = (n) => {
  * @param {number} M max value.
  * @returns {number}
  */
-Math.clamp = (v, m, M) => Math.max(m, Math.min(v, M));
+Utils.clamp = (v, m, M) => Math.max(m, Math.min(v, M));
 /**
  * Linearly interpolates between A and B by t.
  * @param {number} a value A.
  * @param {number} b value B.
- * @param {number} t blend value (between 0 and 1).
+ * @param {number} t blend value (clamped between 0 and 1).
  * @returns {number}
  */
-Math.lerp = (a, b, t) => { t = Math.clamp(t, 0, 1); return a * (1 - t) + b * t; };
+Utils.lerp = (a, b, t) => { t = Utils.clamp(t, 0, 1); return a * (1 - t) + b * t; };
 /**
  * Linearly interpolates between A and B by t.
  * @param {number} a value A.
@@ -1147,8 +1146,9 @@ Math.lerp = (a, b, t) => { t = Math.clamp(t, 0, 1); return a * (1 - t) + b * t; 
  * @param {number} t blend value.
  * @returns {number}
  */
-Math.lerpUnclamped = (a, b, t) => a * (1 - t) + b * t;
+Utils.lerpUnclamped = (a, b, t) => a * (1 - t) + b * t;
 /** Constant for easy conversion from degrees to radians. */
-Math.deg2rad = 1 / 180 * Math.PI;
+Utils.deg2rad = 1 / 180 * Math.PI;
 /** Constant for easy conversion from radians to degrees. */
-Math.rad2deg = 1 / Math.PI * 180;
+Utils.rad2deg = 1 / Math.PI * 180;
+Object.freeze(Utils);

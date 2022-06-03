@@ -1,7 +1,11 @@
-// https://docs.unity3d.com/Packages/com.unity.tiny@0.13/rt/tiny_runtime/classes/_runtimefull_.utmath.matrix3.html
+/**
+ * Creates a 3x3 matrix.
+ * @param {...number[]} v values.
+ * @returns 
+ */
 const Mat3 = (...v:number[]): Matrix3 => {
     const mat = <Matrix3>Array(9).fill(0);
-    for (let i=0; i<Math.clamp(v.length,0,9); i++) {
+    for (let i=0; i<Utils.clamp(v.length,0,9); i++) {
         mat[i] = v[i];
     }
     return mat;
@@ -105,13 +109,13 @@ Mat3.toNormalMat = (M:Matrix3): Matrix3 => Mat3.transpose(Mat3.invert(M));
  * @returns {EulerRotation}
  */
 Mat3.toEuler = (M:Matrix3): EulerRotation => {
-    const x = Math.asin(Math.clamp(M[7],-1,1));
+    const x = Math.asin(Utils.clamp(M[7],-1,1));
     return (Math.abs(M[7])<0.9999999) 
                 ? [x,Math.atan2(-M[6],M[8]),Math.atan2(-M[1],M[4])]
                 : [x,0,Math.atan2(M[3],M[1])];
 };
 /**
- * Converts a 3x3 matrix into a 4x4 one.
+ * Converts a 3x3 rotation matrix into a 4x4 one.
  * @param {Matrix3} M matrix3. 
  * @returns {Matrix4}
  */

@@ -1,12 +1,12 @@
 /**
  * @module
  * Creates a 4x4 matrix.
- * @param {number[]} v values
+ * @param {number[]} v values.
  * @returns {Matrix4}
  */
 const Mat4 = (...v:number[]) => {
     const mat = <Matrix4>Array(16).fill(0);
-    for (let i=0; i<Math.clamp(v.length,0,16); i++) {
+    for (let i=0; i<Utils.clamp(v.length,0,16); i++) {
         mat[i] = v[i];
     }
     return mat;
@@ -127,7 +127,7 @@ Mat4.compose = (p:Vector3, Q:Quaternion, s:Vector3): Matrix4 => {
  * @returns {EulerRotation}
  */
 Mat4.toEuler = (M:Matrix4): EulerRotation => {
-    const x = Math.asin(Math.clamp(M[6],-1,1));
+    const x = Math.asin(Utils.clamp(M[6],-1,1));
     return (Math.abs(M[6])<0.9999999) 
                 ? [x,Math.atan2(-M[2],M[10]),Math.atan2(-M[4],M[5])]
                 : [x,0,Math.atan2(M[1],M[0])];

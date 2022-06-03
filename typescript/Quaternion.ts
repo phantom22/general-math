@@ -29,7 +29,7 @@ Object.freeze(Quat.identity);
  * @param {Quaternion} B rotation B. 
  * @returns {number}
  */
-Quat.angle = (A:Quaternion, B:Quaternion) => 2*Math.acos(Math.abs(Math.clamp(Quat.dot(A,B),-1,1)));
+Quat.angle = (A:Quaternion, B:Quaternion) => 2*Math.acos(Math.abs(Utils.clamp(Quat.dot(A,B),-1,1)));
 /**
  * Combines rotations A and B.
  * @param {Quaternion} A rotation A. 
@@ -80,7 +80,7 @@ Quat.toEuler = (Q:Quaternion): EulerRotation => {
           s1 = Math.sin(A)**2+Math.sin(A),
           s2 = Math.sin(A)**2-Math.sin(A);
 
-    const y = Math.asin(Math.clamp((s2*(Q[0]*Q[2]-Q[2])),-1,1));
+    const y = Math.asin(Utils.clamp((s2*(Q[0]*Q[2]-Q[2])),-1,1));
     
     return (Math.abs(y)<0.9999999) 
                 ? [Math.atan2(s1*(Q[1]*Q[2]+Q[2]),1+(-(Q[0]**2)-(Q[1]**2))*c),y,Math.atan2(s1*(Q[0]*Q[1]-Q[2]),1+(-(Q[1]**2)-(Q[2]**2))*c)] 

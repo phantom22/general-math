@@ -132,7 +132,7 @@ Vec2.distance = (A:Vector2, B:Vector2) => ((A[0]-B[0])**2 + (A[1]-B[1])**2)**(1/
  */
 Vec2.cross = (A:Vector2, B:Vector2): Vector3 => [0, 0, -A[0]*B[1]+A[1]*B[0]];
 /**
- * Gets the unsigned angle in degrees between A and B.
+ * Gets the unsigned angle in radians between A and B.
  * @param {Vector2} A vector2 A.
  * @param {Vector2} B vector2 B. 
  * @returns {number}
@@ -145,7 +145,7 @@ Vec2.angle = (A:Vector2, B:Vector2) => Math.acos(Vec2.dot(A,B) / (Vec2.magnitude
  * @param {Vector2} y min and max for the y component.
  * @returns {Vector2}
  */
-Vec2.clamp = (V:Vector2, x:Vector2, y:Vector2): Vector2 => [Math.clamp(V[0],...x), Math.clamp(V[1],...y)];
+Vec2.clamp = (V:Vector2, x:Vector2, y:Vector2): Vector2 => [Utils.clamp(V[0],...x), Utils.clamp(V[1],...y)];
 /**
  * Returns a copy of a given vector with its components clamped between min and max.
  * @param {Vector2} V vector2.
@@ -153,7 +153,7 @@ Vec2.clamp = (V:Vector2, x:Vector2, y:Vector2): Vector2 => [Math.clamp(V[0],...x
  * @param {number} max max value for both components.
  * @returns {Vector2}
  */
-Vec2.simpleClamp = (V:Vector2, min:number, max:number): Vector2 => [Math.clamp(V[0],min,max), Math.clamp(V[1],min,max)];
+Vec2.simpleClamp = (V:Vector2, min:number, max:number): Vector2 => [Utils.clamp(V[0],min,max), Utils.clamp(V[1],min,max)];
 /**
  * Returns a vector that is made from the largest components of all the passed vectors.
  * @param {Vector2[]} V 2d vectors.
@@ -173,7 +173,7 @@ Vec2.min = (...V:Vector2[]) => { let o=V[0]; for (let i=0;i<V.length;i++) { o[0]
  * @param {number} t blend value between 0 and 1.
  * @returns {Vector2}
  */
-Vec2.lerp = (A:Vector2, B:Vector2, t:number): Vector2 => [Math.lerp(A[0],B[0],t), Math.lerp(A[1],B[1],t)];
+Vec2.lerp = (A:Vector2, B:Vector2, t:number): Vector2 => [Utils.lerp(A[0],B[0],t), Utils.lerp(A[1],B[1],t)];
 /**
  * Converts a Vector2 to Vector3.
  * @param {Vector2} V vector2.

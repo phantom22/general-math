@@ -139,7 +139,7 @@ Vec3.distance = (A:Vector3, B:Vector3) => ((A[0]-B[0])**2 + (A[1]-B[1])**2 + (A[
  */
 Vec3.cross = (A:Vector3, B:Vector3): Vector3 => [A[1]*B[2]-A[2]*B[1], A[0]*B[2]-A[2]*B[0], A[0]*B[1]-A[1]*B[0]];
 /**
- * Gets the unsigned angle in degrees between A and B.
+ * Gets the unsigned angle in radians between A and B.
  * @param {Vector3} A vector3 A.
  * @param {Vector3} B vector3 B. 
  * @returns {number}
@@ -153,7 +153,7 @@ Vec3.angle = (A:Vector3, B:Vector3) => Math.acos(Vec3.dot(A,B) / (Vec3.magnitude
  * @param {Vector2} z min and max for the z component.
  * @returns {Vector3}
  */
-Vec3.clamp = (V:Vector3, x:Vector2, y:Vector2, z:Vector2): Vector3 => [Math.clamp(V[0],...x), Math.clamp(V[1],...y), Math.clamp(V[2],...z)];
+Vec3.clamp = (V:Vector3, x:Vector2, y:Vector2, z:Vector2): Vector3 => [Utils.clamp(V[0],...x), Utils.clamp(V[1],...y), Utils.clamp(V[2],...z)];
 /**
  * Returns a copy of a given vector with its components clamped between min and max.
  * @param {Vector3} V vector3.
@@ -161,7 +161,7 @@ Vec3.clamp = (V:Vector3, x:Vector2, y:Vector2, z:Vector2): Vector3 => [Math.clam
  * @param {number} max max value for both components.
  * @returns {Vector3}
  */
-Vec3.simpleClamp = (V:Vector3, min:number, max:number): Vector3 => [Math.clamp(V[0],min,max), Math.clamp(V[1],min,max), Math.clamp(V[2],min,max),];
+Vec3.simpleClamp = (V:Vector3, min:number, max:number): Vector3 => [Utils.clamp(V[0],min,max), Utils.clamp(V[1],min,max), Utils.clamp(V[2],min,max),];
 /**
  * Returns a vector that is made from the largest components of all the passed vectors.
  * @param {Vector3[]} V 3d vectors.
@@ -181,7 +181,7 @@ Vec3.min = (...V:Vector3[]) => { let o=V[0]; for (let i=0;i<V.length;i++) { o[0]
  * @param {number} t blend value between 0 and 1.
  * @returns {Vector3}
  */
-Vec3.lerp = (A:Vector3, B:Vector3, t:number) => Vec3(Math.lerp(A[0],B[0],t), Math.lerp(A[1],B[1],t), Math.lerp(A[2],B[2],t));
+Vec3.lerp = (A:Vector3, B:Vector3, t:number) => Vec3(Utils.lerp(A[0],B[0],t), Utils.lerp(A[1],B[1],t), Utils.lerp(A[2],B[2],t));
 /**
  * Converts a Vector3 to Vector2.
  * @param {Vector3} V vector3.

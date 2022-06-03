@@ -1,5 +1,5 @@
 /**
- * Creates a 3d axis.
+ * Creates a 3d axis, by normalizing a vector3.
  * @param {number} x first component.
  * @param {number} y second component.
  * @param {number} z third component. 

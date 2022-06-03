@@ -25,20 +25,17 @@ type Matrix4 = [number,number,number,number,number,number,number,number,number,n
 /** Quaternions are used to represent rotations.  1*/
 type Quaternion = [number,number,number,number];
 
-interface Math {
-    factorial(n:number): number;
-    clamp(v:number, min:number, max:number): number;
-    lerp(a:number, b:number, t:number): number;
-    lerpUnclamped(a:number, b:number, t:number): number;
-    deg2rad:number;
-    rad2deg:number;
-}
+/** 
+ * @module
+ * A module that contains fundamental math functions. 
+ */
+const Utils = () => void 0;
 /**
  * Returns the factorial of a number.
  * @param {number} n number 
  * @returns {number}
  */
-Math.factorial = (n:number) => {
+Utils.factorial = (n:number) => {
     let sum=1;
     while (n > 0) {
         sum *= n;
@@ -53,15 +50,15 @@ Math.factorial = (n:number) => {
  * @param {number} M max value. 
  * @returns {number}
  */
-Math.clamp = (v:number, m:number, M:number) => Math.max(m, Math.min(v, M));
+Utils.clamp = (v:number, m:number, M:number) => Math.max(m, Math.min(v, M));
 /**
  * Linearly interpolates between A and B by t.
  * @param {number} a value A.
  * @param {number} b value B.
- * @param {number} t blend value (between 0 and 1). 
+ * @param {number} t blend value (clamped between 0 and 1). 
  * @returns {number}
  */
-Math.lerp = (a:number, b:number, t:number) => { t=Math.clamp(t,0,1); return a*(1-t)+b*t };
+Utils.lerp = (a:number, b:number, t:number) => { t=Utils.clamp(t,0,1); return a*(1-t)+b*t };
 /**
  * Linearly interpolates between A and B by t.
  * @param {number} a value A.
@@ -69,8 +66,9 @@ Math.lerp = (a:number, b:number, t:number) => { t=Math.clamp(t,0,1); return a*(1
  * @param {number} t blend value. 
  * @returns {number}
  */
-Math.lerpUnclamped = (a:number, b:number, t:number) => a*(1-t)+b*t;
+Utils.lerpUnclamped = (a:number, b:number, t:number) => a*(1-t)+b*t;
 /** Constant for easy conversion from degrees to radians. */
-Math.deg2rad = 1/180*Math.PI;
+Utils.deg2rad = 1/180*Math.PI;
 /** Constant for easy conversion from radians to degrees. */
-Math.rad2deg = 1/Math.PI*180;
+Utils.rad2deg = 1/Math.PI*180;
+Object.freeze(Utils);

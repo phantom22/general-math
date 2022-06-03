@@ -139,7 +139,7 @@ Vec4.normalize = (V:Vector4): Vector4 => { const t=1/Vec4.magnitude(V); return [
  */
 Vec4.distance = (A:Vector4, B:Vector4) => ((A[0]-B[0])**2 + (A[1]-B[1])**2 + (A[2]-B[2])**2 + (A[3]-B[3])**2)**(1/2);
 /**
- * Gets the unsigned angle in degrees between A and B.
+ * Gets the unsigned angle in radians between A and B.
  * @param {Vector4} A vector4 A.
  * @param {Vector4} B vector4 B. 
  * @returns {number}
@@ -154,7 +154,7 @@ Vec4.angle = (A:Vector4, B:Vector4) => Math.acos(Vec4.dot(A,B) / (Vec4.magnitude
  * @param {Vector2} w min and max for the w component.
  * @returns {Vector4}
  */
-Vec4.clamp = (V:Vector4, x:Vector2, y:Vector2, z:Vector2, w:Vector2): Vector4 => [Math.clamp(V[0],...x), Math.clamp(V[1],...y), Math.clamp(V[2],...z), Math.clamp(V[3],...w)];
+Vec4.clamp = (V:Vector4, x:Vector2, y:Vector2, z:Vector2, w:Vector2): Vector4 => [Utils.clamp(V[0],...x), Utils.clamp(V[1],...y), Utils.clamp(V[2],...z), Utils.clamp(V[3],...w)];
 /**
  * Returns a copy of a given vector with its components clamped between min and max.
  * @param {Vector4} V vector4.
@@ -162,7 +162,7 @@ Vec4.clamp = (V:Vector4, x:Vector2, y:Vector2, z:Vector2, w:Vector2): Vector4 =>
  * @param {number} max max value for both components.
  * @returns {Vector4}
  */
-Vec4.simpleClamp = (V:Vector4, min:number, max:number): Vector4 => [Math.clamp(V[0],min,max), Math.clamp(V[1],min,max), Math.clamp(V[2],min,max), Math.clamp(V[3],min,max)];
+Vec4.simpleClamp = (V:Vector4, min:number, max:number): Vector4 => [Utils.clamp(V[0],min,max), Utils.clamp(V[1],min,max), Utils.clamp(V[2],min,max), Utils.clamp(V[3],min,max)];
 /**
  * Returns a vector that is made from the largest components of all the passed vectors.
  * @param {Vector4[]} V 4d vectors.
@@ -182,7 +182,7 @@ Vec4.min = (...V:Vector4[]) => { let o=V[0]; for (let i=0;i<V.length;i++) { o[0]
  * @param {number} t blend value between 0 and 1.
  * @returns {Vector4}
  */
-Vec4.lerp = (A:Vector4, B:Vector4, t:number): Vector4 => [Math.lerp(A[0],B[0],t), Math.lerp(A[1],B[1],t), Math.lerp(A[2],B[2],t), Math.lerp(A[3],B[3],t)];
+Vec4.lerp = (A:Vector4, B:Vector4, t:number): Vector4 => [Utils.lerp(A[0],B[0],t), Utils.lerp(A[1],B[1],t), Utils.lerp(A[2],B[2],t), Utils.lerp(A[3],B[3],t)];
 /**
  * Converts a Vector4 to Vector2.
  * @param {Vector4} V vector4.
