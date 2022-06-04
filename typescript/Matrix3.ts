@@ -47,7 +47,7 @@ Mat3.invert = (M:Matrix3): Matrix3 => {
     const [a,b,c,d,e,f,g,h,i] = M;
         
     return [
-        (e*f-h*i)*det, (-b*i+c*h)*det, (b*f-c*e)*det,
+        (e*i-f*h)*det, (-b*i+c*h)*det, (b*f-c*e)*det,
         (-d*i+f*g)*det, (a*i-c*g)*det, (-a*f+c*d)*det,
         (d*h-e*g)*det, (-a*h+b*g)*det, (a*e-b*d)*det
     ];

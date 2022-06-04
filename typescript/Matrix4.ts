@@ -40,7 +40,7 @@ Mat4.transpose = (A:Matrix4): Matrix4 => [A[0],A[4],A[8],A[12],A[1],A[5],A[9],A[
  * @param {Matrix4} M matrix4.
  * @returns {Matrix4}
  */
-Mat4.invert = (M:Matrix4): Matrix4 => {
+Mat4.invertOld = (M:Matrix4): Matrix4 => {
     let det = Mat4.det(M);
     if (det===0) return Mat4.zero;
     det = 1/det;
@@ -54,6 +54,57 @@ Mat4.invert = (M:Matrix4): Matrix4 => {
         (-e*d1+g*d4-h*d5)*det, (a*d1-c*d4+d*d5)*det, (-a*d7+c*d10-d*d11)*det, (a*d13-c*d16+d*d17)*det,
         (e*d2-g*d4+h*d5)*det, (-a*d2+b*d4-d*d6)*det, (a*d8-b*d10+d*d12)*det, (-a*d14+b*d16-d*d18)*det,
         (-e*d3+f*d5-g*d6)*det, (a*d3-b*d5+c*d6)*det, (-a*d9+b*d11-c*d12)*det, (a*d15-b*d17+c*d18)*det
+    ]
+};
+/**
+ * Returns the inverse of a given matrix.
+ * @param {Matrix4} M matrix4.
+ * @returns {Matrix4}
+ */
+Mat4.invert = (M:Matrix4): Matrix4 => {
+    let det = Mat4.det(M);
+    if (det===0) return Mat4.zero;
+    det = 1/det;
+    const [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p] = M,
+        d1=k*p-l*o, 
+        d2=j*p-l*n, 
+        d3=j*o-k*n, 
+        d4=g*p-h*o, 
+        d5=f*p-h*n, 
+        d6=f*o-g*n,
+        d7=g*l-h*k, 
+        d8=f*l-h*j, 
+        d9=f*k-g*j, 
+        d10=i*p-l*m, 
+        d11=i*o-k*m, 
+        d12 =e*p-h*m,
+        d13=e*o-g*m, 
+        d14=e*l-h*i, 
+        d15=e*k-g*i, 
+        d16=i*n-j*m, 
+        d17=e*n-f*m, 
+        d18=e*j-f*i;
+        
+    return [
+        (f *d1 -g*d2 +h*d3)*det, 
+        (-b*d1 +c*d2 -d*d3)*det, 
+        (b *d4 -c*d5 +d*d6)*det, 
+        (-b*d7+c *d8 -d*d9)*det,
+
+        (-e*d1 +g*d10-h*d11)*det, 
+        (a *d1 -c*d10+d*d11)*det, 
+        (-a*d4 +c*d12-d*d13)*det, 
+        (a *d7 -c*d14+d*d15)*det,
+
+        (e *d2 -f*d10+h*d16)*det, 
+        (-a*d2 +b*d10-d*d16)*det, 
+        (a *d5 -b*d12+d*d17)*det, 
+        (-a*d8 +b*d14-d*d18)*det,
+
+        (-e*d3 +f*d11-g*d16)*det, 
+        (a *d3 -b*d11+c*d16)*det, 
+        (-a*d6 +b*d13-c*d17)*det, 
+        (a *d9 -b*d15+c*d18)*det
     ]
 };
 /**
