@@ -1,15 +1,9 @@
 /**
+ * @module
  * Creates a 3x3 matrix.
- * @param {...number[]} v values.
- * @returns 
+ * @returns {Matrix3}
  */
-const Mat3 = (...v:number[]): Matrix3 => {
-    const mat = <Matrix3>Array(9).fill(0);
-    for (let i=0; i<Utils.clamp(v.length,0,9); i++) {
-        mat[i] = v[i];
-    }
-    return mat;
-}
+const Mat3 = (a=0,b=0,c=0,d=0,e=0,f=0,g=0,h=0,i=0): Matrix3 => [a,b,c,d,e,f,g,h,i];
 
 /**
  * Returns a formatted string for a given matrix.
@@ -120,4 +114,22 @@ Mat3.toEuler = (M:Matrix3): EulerRotation => {
  * @returns {Matrix4}
  */
 Mat3.toMat4 = (M:Matrix3): Matrix4 => [M[0],M[3],M[6],0,M[1],M[4],M[7],0,M[2],M[5],M[8],0,0,0,0,1];
+/**
+ * Creates a matrix from three rows.
+ * @param {Vector3} a vector3.
+ * @param {Vector3} b vector3.
+ * @param {Vector3} c vector3.
+ * @param {Vector3} d vector3.
+ * @returns {Matrix3}
+ */
+Mat3.fromRows = (a=Vec3.zero, b=Vec3.zero, c=Vec3.zero): Matrix3 => Mat3(...a,...b,...c);
+ /**
+  * Creates a matrix from three columns.
+  * @param {Vector3} a vector3.
+  * @param {Vector3} b vector3.
+  * @param {Vector3} c vector3.
+  * @param {Vector3} d vector3.
+  * @returns {Matrix3}
+  */
+Mat3.fromCols = (a=Vec3.zero, b=Vec3.zero, c=Vec3.zero): Matrix3 => Mat3(a[0],b[0],c[0],a[1],b[1],c[1],a[2],b[2],c[2]);
 Object.freeze(Mat3);

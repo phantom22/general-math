@@ -1,16 +1,9 @@
 /**
  * @module
  * Creates a 4x4 matrix.
- * @param {number[]} v values.
  * @returns {Matrix4}
  */
-const Mat4 = (...v:number[]) => {
-    const mat = <Matrix4>Array(16).fill(0);
-    for (let i=0; i<Utils.clamp(v.length,0,16); i++) {
-        mat[i] = v[i];
-    }
-    return mat;
-}
+const Mat4 = (a=0,b=0,c=0,d=0,e=0,f=0,g=0,h=0,i=0,j=0,k=0,l=0,m=0,n=0,o=0,p=0): Matrix4 => [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p];
 /**
  * Returns a formatted string for a given matrix.
  * @param {Matrix4} M matrix4.
@@ -142,4 +135,22 @@ Mat4.toMat3 = (M:Matrix4): Matrix3 => [M[0],M[4],M[8],M[1],M[5],M[9],M[2],M[6],M
  * @returns {Matrix3}
  */
 Mat4.toNormalMat = (M:Matrix4): Matrix3 => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
+/**
+ * Creates a matrix from four row vectors.
+ * @param {Vector4} a vector4.
+ * @param {Vector4} b vector4.
+ * @param {Vector4} c vector4.
+ * @param {Vector4} d vector4.
+ * @returns {Matrix4}
+ */
+Mat4.fromRows = (a=Vec4.zero, b=Vec4.zero, c=Vec4.zero, d=Vec4.zero): Matrix4 => Mat4(...a,...b,...c,...d);
+/**
+ * Creates a matrix from four column vectors.
+ * @param {Vector4} a vector4.
+ * @param {Vector4} b vector4.
+ * @param {Vector4} c vector4.
+ * @param {Vector4} d vector4.
+ * @returns {Matrix4}
+ */
+Mat4.fromCols = (a=Vec4.zero, b=Vec4.zero, c=Vec4.zero, d=Vec4.zero): Matrix4 => Mat4(a[0],b[0],c[0],d[0],a[1],b[1],c[1],d[1],a[2],b[2],c[2],d[2],a[3],b[3],c[3],d[3]);
 Object.freeze(Mat4);

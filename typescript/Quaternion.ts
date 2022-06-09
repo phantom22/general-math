@@ -1,4 +1,5 @@
 /**
+ * @module
  * Creates a quaternion.
  * @param {number} x first component.
  * @param {number} y second component.
@@ -6,7 +7,7 @@
  * @param {number} w forth component. 
  * @returns {Quaternion}
  */
-const Quat = (x=0, y=0, z=0, w=1): Quaternion => [x,y,z,w];
+const Quat = (x=0,y=0,z=0,w=1): Quaternion => [x,y,z,w];
 /**
  * Returns a formatted string for a given Quaternion.
  * @param {Quaternion} Q Quaternion.

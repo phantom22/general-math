@@ -7,7 +7,7 @@
  * @param {number} w third component.
  * @returns {Vector4}
  */
-const Vec4 = (x=0, y=0, z=0, w=0): Vector4 => [x,y,z,w];
+const Vec4 = (x=0,y=0,z=0,w=0): Vector4 => [x,y,z,w];
 /**
  * Returns a formatted string for a given Quaternion.
  * @param {Vector4} V vector4.

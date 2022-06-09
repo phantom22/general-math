@@ -1,8 +1,9 @@
 /**
+ * @module
  * Creates a Vector3 containing the euler angles.
- * @param x rotation around x axis.
- * @param y rotation around y axis.
- * @param z rotation around z axis.
+ * @param {number} x rotation around x axis.
+ * @param {number} y rotation around y axis.
+ * @param {number} z rotation around z axis.
  * @returns {EulerRotation}
  */
 const Euler = (x=0,y=0,z=0) => <EulerRotation>[x,y,z];

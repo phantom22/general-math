@@ -1,14 +1,4 @@
 /**
- * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
- * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
- * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
- * @typedef {[number,number,number]} Axis Representation of an axis.
- * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
- * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
- * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
- * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
- */
-/**
  * Creates a 3d axis, by normalizing a vector3.
  * @param {number} x first component.
  * @param {number} y second component.
@@ -34,10 +24,11 @@ Ax.toQuat = (A, ang) => {
 Ax.toString = (A) => `Axis(${A[0]},${A[1]},${A[2]})`;
 Object.freeze(Ax);
 /**
+ * @module
  * Creates a Vector3 containing the euler angles.
- * @param x rotation around x axis.
- * @param y rotation around y axis.
- * @param z rotation around z axis.
+ * @param {number} x rotation around x axis.
+ * @param {number} y rotation around y axis.
+ * @param {number} z rotation around z axis.
  * @returns {EulerRotation}
  */
 const Euler = (x = 0, y = 0, z = 0) => [x, y, z];
@@ -58,17 +49,11 @@ Euler.toQuat = (E) => {
 Euler.toString = (E) => `Euler<ZXY>(${E[0]}°,${E[1]}°,${E[2]}°)`;
 Object.freeze(Euler);
 /**
+ * @module
  * Creates a 3x3 matrix.
- * @param {...number[]} v values.
- * @returns
+ * @returns {Matrix3}
  */
-const Mat3 = (...v) => {
-    const mat = Array(9).fill(0);
-    for (let i = 0; i < Utils.clamp(v.length, 0, 9); i++) {
-        mat[i] = v[i];
-    }
-    return mat;
-};
+const Mat3 = (a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, i = 0) => [a, b, c, d, e, f, g, h, i];
 /**
  * Returns a formatted string for a given matrix.
  * @param {Matrix3} M matrix3.
@@ -177,20 +162,31 @@ Mat3.toEuler = (M) => {
  * @returns {Matrix4}
  */
 Mat3.toMat4 = (M) => [M[0], M[3], M[6], 0, M[1], M[4], M[7], 0, M[2], M[5], M[8], 0, 0, 0, 0, 1];
+/**
+ * Creates a matrix from three rows.
+ * @param {Vector3} a vector3.
+ * @param {Vector3} b vector3.
+ * @param {Vector3} c vector3.
+ * @param {Vector3} d vector3.
+ * @returns {Matrix3}
+ */
+Mat3.fromRows = (a = Vec3.zero, b = Vec3.zero, c = Vec3.zero) => Mat3(...a, ...b, ...c);
+/**
+ * Creates a matrix from three columns.
+ * @param {Vector3} a vector3.
+ * @param {Vector3} b vector3.
+ * @param {Vector3} c vector3.
+ * @param {Vector3} d vector3.
+ * @returns {Matrix3}
+ */
+Mat3.fromCols = (a = Vec3.zero, b = Vec3.zero, c = Vec3.zero) => Mat3(a[0], b[0], c[0], a[1], b[1], c[1], a[2], b[2], c[2]);
 Object.freeze(Mat3);
 /**
  * @module
  * Creates a 4x4 matrix.
- * @param {number[]} v values.
  * @returns {Matrix4}
  */
-const Mat4 = (...v) => {
-    const mat = Array(16).fill(0);
-    for (let i = 0; i < Utils.clamp(v.length, 0, 16); i++) {
-        mat[i] = v[i];
-    }
-    return mat;
-};
+const Mat4 = (a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, i = 0, j = 0, k = 0, l = 0, m = 0, n = 0, o = 0, p = 0) => [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p];
 /**
  * Returns a formatted string for a given matrix.
  * @param {Matrix4} M matrix4.
@@ -317,8 +313,27 @@ Mat4.toMat3 = (M) => [M[0], M[4], M[8], M[1], M[5], M[9], M[2], M[6], M[10]];
  * @returns {Matrix3}
  */
 Mat4.toNormalMat = (M) => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
+/**
+ * Creates a matrix from four row vectors.
+ * @param {Vector4} a vector4.
+ * @param {Vector4} b vector4.
+ * @param {Vector4} c vector4.
+ * @param {Vector4} d vector4.
+ * @returns {Matrix4}
+ */
+Mat4.fromRows = (a = Vec4.zero, b = Vec4.zero, c = Vec4.zero, d = Vec4.zero) => Mat4(...a, ...b, ...c, ...d);
+/**
+ * Creates a matrix from four column vectors.
+ * @param {Vector4} a vector4.
+ * @param {Vector4} b vector4.
+ * @param {Vector4} c vector4.
+ * @param {Vector4} d vector4.
+ * @returns {Matrix4}
+ */
+Mat4.fromCols = (a = Vec4.zero, b = Vec4.zero, c = Vec4.zero, d = Vec4.zero) => Mat4(a[0], b[0], c[0], d[0], a[1], b[1], c[1], d[1], a[2], b[2], c[2], d[2], a[3], b[3], c[3], d[3]);
 Object.freeze(Mat4);
 /**
+ * @module
  * Creates a quaternion.
  * @param {number} x first component.
  * @param {number} y second component.

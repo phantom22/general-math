@@ -5,7 +5,7 @@
  * @param {number} y second component.
  * @returns {Vector2}
  */
-const Vec2 = (x=0, y=0): Vector2 => [x,y];
+const Vec2 = (x=0,y=0): Vector2 => [x,y];
 /**
  * Returns a formatted string for a given vector.
  * @param {Vector2} V vector2.
