@@ -87,10 +87,22 @@ Mat3.getCol = (M:Matrix3, i:number): Vector3 => [M[i],M[3+i],M[6+i]];
  * @param {number} i row index.
  * @returns {Vector3}
  */
-Mat3.getRow = (M:Matrix4, i:number): Vector3 => {
+Mat3.getRow = (M:Matrix3, i:number): Vector3 => {
     const offs = i*3;
     return [M[offs],M[offs+1],M[offs+2]];
-}
+};
+/**
+ * Returns all the columns of a given Matrix3 as an array of Vector3.
+ * @param {Matrix3} M matrix3. 
+ * @returns {[Vector3,Vector3,Vector3]}
+ */
+Mat3.getCols = (M:Matrix3): [Vector3,Vector3,Vector3] => [[M[0],M[3],M[6]],[M[1],M[4],M[7]],[M[2],M[5],M[8]]];
+ /**
+  * Returns all the rows of a given Matrix3 as an array of Vector3.
+  * @param {Matrix3} M matrix3. 
+  * @returns {[Vector3,Vector3,Vector3]}
+  */
+Mat3.getRows = (M:Matrix3): [Vector3,Vector3,Vector3]  => [[M[0],M[1],M[2]],[M[3],M[4],M[5]],[M[6],M[7],M[8]]];
 /**
  * Returns the normal matrix of a given Matrix3.
  * @param {Matrix3} M matrix3. 

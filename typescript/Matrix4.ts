@@ -92,7 +92,19 @@ Mat4.getCol = (M:Matrix4, i:number): Vector4 => [M[i],M[4+i],M[8+i],M[12+i]];
 Mat4.getRow = (M:Matrix4, i:number): Vector4 => {
     const offs = i*4;
     return [M[offs],M[offs+1],M[offs+2],M[offs+3]];
-}
+};
+/**
+ * Returns all the columns of a given Matrix4 as an array of Vector4.
+ * @param {Matrix4} M matrix4. 
+ * @returns {[Vector4,Vector4,Vector4,Vector4]}
+ */
+Mat4.getCols = (M:Matrix4): [Vector4,Vector4,Vector4,Vector4] => [[M[0],M[4],M[8],M[12]],[M[1],M[5],M[9],M[13]],[M[2],M[6],M[10],M[14]],[M[3],M[7],M[11],M[15]]];
+ /**
+  * Returns all the rows of a given Matrix4 as an array of Vector4.
+  * @param {Matrix4} M matrix4. 
+  * @returns {[Vector4,Vector4,Vector4,Vector4]}
+  */
+Mat4.getRows = (M:Matrix4): [Vector4,Vector4,Vector4,Vector4]  => [[M[0],M[1],M[2],M[3]],[M[4],M[5],M[6],M[7]],[M[8],M[9],M[10],M[11]],[M[12],M[13],M[14],M[15]]];
 /**
  * Converts a Quaternion into a Matrix4.
  * @param {Vector3} p position. 

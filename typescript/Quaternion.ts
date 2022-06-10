@@ -88,7 +88,7 @@ Quat.toEuler = (Q:Quaternion): EulerRotation => {
                 : [0,y,Math.atan2(-s2*(Q[0]*Q[1]-Q[2]),1+(-(Q[0]**2)-(Q[2]**2))*c)];
 }
 /**
- * Converts a Quaternion into a rotation matrix4.
+ * Converts a Quaternion into a rotation Matrix4.
  * @param {Quaternion} Q quaternion. 
  * @returns {Matrix4}
  */
@@ -104,7 +104,7 @@ Quat.toMat4 = (Q:Quaternion): Matrix4 => {
     ]
 };
 /**
- * Converts a Quaternion into a rotation matrix3.
+ * Converts a Quaternion into a rotation Matrix3.
  * @param {Quaternion} Q quaternion. 
  * @returns {Matrix4}
  */

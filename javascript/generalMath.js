@@ -150,6 +150,18 @@ Mat3.getRow = (M, i) => {
     return [M[offs], M[offs + 1], M[offs + 2]];
 };
 /**
+ * Returns all the columns of a given Matrix3 as an array of Vector3.
+ * @param {Matrix3} M matrix3.
+ * @returns {[Vector3,Vector3,Vector3]}
+ */
+Mat3.getCols = (M) => [[M[0], M[3], M[6]], [M[1], M[4], M[7]], [M[2], M[5], M[8]]];
+/**
+ * Returns all the rows of a given Matrix3 as an array of Vector3.
+ * @param {Matrix3} M matrix3.
+ * @returns {[Vector3,Vector3,Vector3]}
+ */
+Mat3.getRows = (M) => [[M[0], M[1], M[2]], [M[3], M[4], M[5]], [M[6], M[7], M[8]]];
+/**
  * Returns the normal matrix of a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {Matrix3}
@@ -284,6 +296,18 @@ Mat4.getRow = (M, i) => {
     const offs = i * 4;
     return [M[offs], M[offs + 1], M[offs + 2], M[offs + 3]];
 };
+/**
+ * Returns all the columns of a given Matrix4 as an array of Vector4.
+ * @param {Matrix4} M matrix4.
+ * @returns {[Vector4,Vector4,Vector4,Vector4]}
+ */
+Mat4.getCols = (M) => [[M[0], M[4], M[8], M[12]], [M[1], M[5], M[9], M[13]], [M[2], M[6], M[10], M[14]], [M[3], M[7], M[11], M[15]]];
+/**
+ * Returns all the rows of a given Matrix4 as an array of Vector4.
+ * @param {Matrix4} M matrix4.
+ * @returns {[Vector4,Vector4,Vector4,Vector4]}
+ */
+Mat4.getRows = (M) => [[M[0], M[1], M[2], M[3]], [M[4], M[5], M[6], M[7]], [M[8], M[9], M[10], M[11]], [M[12], M[13], M[14], M[15]]];
 /**
  * Converts a Quaternion into a Matrix4.
  * @param {Vector3} p position.
@@ -427,7 +451,7 @@ Quat.toEuler = (Q) => {
         : [0, y, Math.atan2(-s2 * (Q[0] * Q[1] - Q[2]), 1 + (-(Q[0] ** 2) - (Q[2] ** 2)) * c)];
 };
 /**
- * Converts a Quaternion into a rotation matrix4.
+ * Converts a Quaternion into a rotation Matrix4.
  * @param {Quaternion} Q quaternion.
  * @returns {Matrix4}
  */
@@ -441,7 +465,7 @@ Quat.toMat4 = (Q) => {
     ];
 };
 /**
- * Converts a Quaternion into a rotation matrix3.
+ * Converts a Quaternion into a rotation Matrix3.
  * @param {Quaternion} Q quaternion.
  * @returns {Matrix4}
  */
@@ -460,6 +484,39 @@ Quat.toMat3 = (Q) => {
  */
 Quat.toEuler = (Q) => Mat4.toEuler(Quat.toMat4(Q));
 Object.freeze(Quat);
+/**
+ * @module
+ * This module helps to create unique identifiers and store them in a registry.
+ */
+const Registry = () => void 0;
+/** Object that contains all the uuid/value pairs. */
+Registry.generated = {};
+/** Lookup table, needed for uuid generation. */
+Registry.lut = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "1a", "1b", "1c", "1d", "1e", "1f", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "2a", "2b", "2c", "2d", "2e", "2f", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "3a", "3b", "3c", "3d", "3e", "3f", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "4a", "4b", "4c", "4d", "4e", "4f", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "5a", "5b", "5c", "5d", "5e", "5f", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "6a", "6b", "6c", "6d", "6e", "6f", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "7a", "7b", "7c", "7d", "7e", "7f", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "8a", "8b", "8c", "8d", "8e", "8f", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "9a", "9b", "9c", "9d", "9e", "9f", "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "aa", "ab", "ac", "ad", "ae", "af", "b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "ba", "bb", "bc", "bd", "be", "bf", "c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "ca", "cb", "cc", "cd", "ce", "cf", "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "da", "db", "dc", "dd", "de", "df", "e0", "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "ea", "eb", "ec", "ed", "ee", "ef", "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff"];
+Object.freeze(Registry.lut);
+/**
+ * Retrieve the value of a given uuid.
+ * @param {string} u uuid.
+ */
+Registry.get = (u) => Registry.generated[u];
+/**
+ * Deletes a given uuid from the registry.
+ * @param {string} u uuid.
+ */
+Registry.delete = (u) => delete Registry.generated[u];
+/**
+ * Ties a given value to a randomized uuid.
+ * @param {any} v value.
+ * @returns {string}
+ */
+Registry.generateUUID = (v) => {
+    const t = Registry.lut;
+    const [a, b, c, d] = [Math.random() * 0xffffffff | 0, Math.random() * 0xffffffff | 0, Math.random() * 0xffffffff | 0, Math.random() * 0xffffffff | 0];
+    const uuid = (t[a & 0xff] + t[a >> 8 & 0xff] + t[a >> 16 & 0xff] + t[a >> 24 & 0xff] + '-' + t[b & 0xff] + t[b >> 8 & 0xff] + '-' + t[b >> 16 & 0x0f | 0x40] + t[b >> 24 & 0xff] + '-' + t[c & 0x3f | 0x80] + t[c >> 8 & 0xff] + '-' + t[c >> 16 & 0xff] + t[c >> 24 & 0xff] + t[d & 0xff] + t[d >> 8 & 0xff] + t[d >> 16 & 0xff] + t[d >> 24 & 0xff]).toLowerCase();
+    Registry.generated[uuid] = v;
+    return uuid;
+};
+Object.freeze(Registry);
 /**
  * @module
  * Creates A 2D vector.
