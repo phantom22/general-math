@@ -7,7 +7,7 @@
  */
 const Ax = (x=0,y=0,z=0): Axis => Vec3.normalize([x,y,z]);
 /**
- * Converts angle-axis to a rotation representation.
+ * Converts an Axis rotation to Quaternion.
  * @param {Axis} A axis.
  * @param {number} ang angle. 
  * @returns {Quaternion}
@@ -17,7 +17,7 @@ Ax.toQuat = (A:Axis, ang:number): Quaternion => {
     return [A[0]*s,A[1]*s,A[2]*s,Math.cos(hf)];
 }
 /**
- * Returns a formatted string for a given axis.
+ * Returns a formatted string for a given Axis.
  * @param {Axis} A axis.
  * @returns {string}
  */

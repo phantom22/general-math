@@ -1,4 +1,14 @@
 /**
+ * @typedef {[number,number]} Vector2 Representation of 2D vectors and points.
+ * @typedef {[number,number,number]} Vector3 Representation of 3D vectors and points.
+ * @typedef {[number,number,number,number]} Vector4 Representation of 4D vectors and points.
+ * @typedef {[number,number,number]} Axis Representation of an axis.
+ * @typedef {[number,number,number]} EulerRotation Representation of rotation in euler angles.
+ * @typedef {[number,number,number,number,number,number,number,number,number]} Matrix3 A standard 3x3 rotation matrix.
+ * @typedef {[number,number,number,number,number,number,number,number,number,number,number,number,number,number,number,number]} Matrix4 A standard 4x4 transformation matrix.
+ * @typedef {[number,number,number,number]} Quaternion Quaternions are used to represent rotations.
+ */
+/**
  * Creates a 3d axis, by normalizing a vector3.
  * @param {number} x first component.
  * @param {number} y second component.
@@ -7,7 +17,7 @@
  */
 const Ax = (x = 0, y = 0, z = 0) => Vec3.normalize([x, y, z]);
 /**
- * Converts angle-axis to a rotation representation.
+ * Converts an Axis rotation to Quaternion.
  * @param {Axis} A axis.
  * @param {number} ang angle.
  * @returns {Quaternion}
@@ -17,7 +27,7 @@ Ax.toQuat = (A, ang) => {
     return [A[0] * s, A[1] * s, A[2] * s, Math.cos(hf)];
 };
 /**
- * Returns a formatted string for a given axis.
+ * Returns a formatted string for a given Axis.
  * @param {Axis} A axis.
  * @returns {string}
  */
@@ -25,7 +35,7 @@ Ax.toString = (A) => `Axis(${A[0]},${A[1]},${A[2]})`;
 Object.freeze(Ax);
 /**
  * @module
- * Creates a Vector3 containing the euler angles.
+ * Creates a Vector3 containing the Euler Angles.
  * @param {number} x rotation around x axis.
  * @param {number} y rotation around y axis.
  * @param {number} z rotation around z axis.
@@ -33,7 +43,7 @@ Object.freeze(Ax);
  */
 const Euler = (x = 0, y = 0, z = 0) => [x, y, z];
 /**
- * Converts a given ZXY euler rotation to a quaternion.
+ * Converts a given ZXY Euler Rotation to a Quaternion.
  * @param {EulerRotation} E euler rotation.
  * @returns {Quaternion}
  */
@@ -42,7 +52,7 @@ Euler.toQuat = (E) => {
     return [s1 * c2 * c3 - c1 * s2 * s3, c1 * s2 * c3 + s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
 };
 /**
- * Returns a formatted string for a given vector.
+ * Returns a formatted string for a given Euler Rotation.
  * @param {EulerRotation} E euler rotation.
  * @returns {string}
  */
@@ -55,7 +65,7 @@ Object.freeze(Euler);
  */
 const Mat3 = (a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, i = 0) => [a, b, c, d, e, f, g, h, i];
 /**
- * Returns a formatted string for a given matrix.
+ * Returns a formatted string for a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {string}
  */
@@ -67,19 +77,19 @@ Object.freeze(Mat3.identity);
 Mat3.zero = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 Object.freeze(Mat3.zero);
 /**
- * Returns the determinant of a given matrix.
+ * Returns the determinant of a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {number}
  */
 Mat3.det = (M) => M[6] * (M[1] * M[5] - M[2] * M[4]) - M[7] * (M[0] * M[5] - M[2] * M[3]) + M[8] * (M[0] * M[4] - M[1] * M[3]);
 /**
- * Returns the transpose of a given matrix.
+ * Returns the transpose of a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {Matrix3}
  */
 Mat3.transpose = (M) => [M[0], M[3], M[6], M[1], M[4], M[7], M[2], M[5], M[8]];
 /**
- * Returns the inverse of a given matrix.
+ * Returns the inverse of a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {Matrix3}
  */
@@ -96,7 +106,7 @@ Mat3.invert = (M) => {
     ];
 };
 /**
- * Checks whether the given matrix is an identity matrix.
+ * Checks whether the given Matrix3 is an identity matrix.
  * @param {Matrix3} M matrix3.
  * @returns {boolean}
  */
@@ -116,21 +126,21 @@ Mat3.prod = (A, B) => {
     ];
 };
 /**
- * Creates a scaling matrix.
+ * Creates a scaling Matrix3.
  * @param {Matrix3} M matrix3.
  * @param {Vector2} V vector2.
  * @returns {Matrix3}
  */
 Mat3.scale = (M, V) => [M[0] * V[0], M[1] * V[0], M[2] * V[0], M[3] * V[1], M[4] * V[1], M[5] * V[1], M[6], M[7], M[8]];
 /**
- * Get a column of the given matrix.
+ * Get a column of the given Matrix3.
  * @param {Matrix3} M matrix3.
  * @param {number} i column index.
  * @returns {Vector3}
  */
 Mat3.getCol = (M, i) => [M[i], M[3 + i], M[6 + i]];
 /**
- * Get a row of the given matrix.
+ * Get a row of the given Matrix3.
  * @param {Matrix3} M matrix3.
  * @param {number} i row index.
  * @returns {Vector3}
@@ -140,14 +150,14 @@ Mat3.getRow = (M, i) => {
     return [M[offs], M[offs + 1], M[offs + 2]];
 };
 /**
- * Returns the normal matrix of a given matrix.
+ * Returns the normal matrix of a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {Matrix3}
  */
 Mat3.toNormalMat = (M) => Mat3.transpose(Mat3.invert(M));
 /**
- * Converts a rotation matrix3 to ZXY euler angles (radians).
- * @param {Matrix3} M rotation matrix3.
+ * Converts a rotation Matrix3 to ZXY Euler Angles (radians).
+ * @param {Matrix3} M matrix3.
  * @returns {EulerRotation}
  */
 Mat3.toEuler = (M) => {
@@ -157,13 +167,13 @@ Mat3.toEuler = (M) => {
         : [x, 0, Math.atan2(M[3], M[1])];
 };
 /**
- * Converts a 3x3 rotation matrix into a 4x4 one.
+ * Converts a given rotation Matrix3 to Matrix4.
  * @param {Matrix3} M matrix3.
  * @returns {Matrix4}
  */
 Mat3.toMat4 = (M) => [M[0], M[3], M[6], 0, M[1], M[4], M[7], 0, M[2], M[5], M[8], 0, 0, 0, 0, 1];
 /**
- * Creates a matrix from three rows.
+ * Creates a Matrix3 from three row vectors.
  * @param {Vector3} a vector3.
  * @param {Vector3} b vector3.
  * @param {Vector3} c vector3.
@@ -172,7 +182,7 @@ Mat3.toMat4 = (M) => [M[0], M[3], M[6], 0, M[1], M[4], M[7], 0, M[2], M[5], M[8]
  */
 Mat3.fromRows = (a = Vec3.zero, b = Vec3.zero, c = Vec3.zero) => Mat3(...a, ...b, ...c);
 /**
- * Creates a matrix from three columns.
+ * Creates a Matrix3 from three column vectors.
  * @param {Vector3} a vector3.
  * @param {Vector3} b vector3.
  * @param {Vector3} c vector3.
@@ -188,7 +198,7 @@ Object.freeze(Mat3);
  */
 const Mat4 = (a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, i = 0, j = 0, k = 0, l = 0, m = 0, n = 0, o = 0, p = 0) => [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p];
 /**
- * Returns a formatted string for a given matrix.
+ * Returns a formatted string for a given Matrix4.
  * @param {Matrix4} M matrix4.
  * @returns {string}
  */
@@ -200,19 +210,19 @@ Object.freeze(Mat4.identity);
 Mat4.zero = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 Object.freeze(Mat4.zero);
 /**
- * Returns the determinant of a given matrix.
+ * Returns the determinant of a given Matrix4.
  * @param {Matrix4} M matrix4.
  * @returns {number}
  */
 Mat4.det = (M) => -M[12] * (M[9] * (M[2] * M[7] - M[3] * M[6]) - M[10] * (M[1] * M[7] - M[3] * M[5]) + M[11] * (M[1] * M[6] - M[2] * M[5])) + M[13] * (M[8] * (M[2] * M[7] - M[3] * M[6]) - M[10] * (M[0] * M[7] - M[3] * M[4]) + M[11] * (M[0] * M[6] - M[2] * M[4])) - M[14] * (M[8] * (M[1] * M[7] - M[3] * M[5]) - M[9] * (M[0] * M[7] - M[3] * M[4]) + M[11] * (M[0] * M[5] - M[1] * M[4])) + M[15] * (M[8] * (M[1] * M[6] - M[2] * M[5]) - M[9] * (M[0] * M[6] - M[2] * M[4]) + M[10] * (M[0] * M[5] - M[1] * M[4]));
 /**
- * Returns the transpose of a given matrix.
+ * Returns the transpose of a given Matrix4.
  * @param {Matrix4} M matrix4.
  * @returns {Matrix4}
  */
 Mat4.transpose = (A) => [A[0], A[4], A[8], A[12], A[1], A[5], A[9], A[13], A[2], A[6], A[10], A[14], A[3], A[7], A[11], A[15]];
 /**
- * Returns the inverse of a given matrix.
+ * Returns the inverse of a given Matrix4.
  * @param {Matrix4} M matrix4.
  * @returns {Matrix4}
  */
@@ -230,7 +240,7 @@ Mat4.invert = (M) => {
     ];
 };
 /**
- * Checks whether the given matrix is an identity matrix.
+ * Checks whether the given Matrix4 is an identity matrix.
  * @param {Matrix4} M matrix4.
  * @returns {boolean}
  */
@@ -251,21 +261,21 @@ Mat4.prod = (A, B) => {
     ];
 };
 /**
- * Creates a scaling matrix.
- * @param {Matrix4} M Matrix4.
+ * Creates a scaling Matrix4.
+ * @param {Matrix4} M matrix4.
  * @param {Vector3} V Vector3.
  * @returns {Matrix4}
  */
 Mat4.scale = (M, V) => [M[0] * V[0], M[1] * V[0], M[2] * V[0], M[3] * V[0], M[4] * V[1], M[5] * V[1], M[6] * V[1], M[7] * V[1], M[8] * V[2], M[9] * V[2], M[10] * V[2], M[11] * V[2], M[12], M[13], M[14], M[15]];
 /**
- * Get a column of the given matrix.
+ * Get a column of the given Matrix4.
  * @param {Matrix4} M matrix4.
  * @param {number} i column index.
  * @returns {Vector4}
  */
 Mat4.getCol = (M, i) => [M[i], M[4 + i], M[8 + i], M[12 + i]];
 /**
- * Get a row of the given matrix.
+ * Get a row of the given Matrix4.
  * @param {Matrix4} M matrix4.
  * @param {number} i row index.
  * @returns {Vector4}
@@ -275,7 +285,7 @@ Mat4.getRow = (M, i) => {
     return [M[offs], M[offs + 1], M[offs + 2], M[offs + 3]];
 };
 /**
- * Converts a quaternion into a matrix4.
+ * Converts a Quaternion into a Matrix4.
  * @param {Vector3} p position.
  * @param {Quaternion} Q quaternion.
  * @param {Vector3} s scale.
@@ -291,8 +301,8 @@ Mat4.compose = (p, Q, s) => {
     ];
 };
 /**
- * Converts a rotation matrix4 to ZXY euler angles (radians).
- * @param {Matrix4} M rotation matrix4.
+ * Converts a rotation Matrix4 to ZXY Euler Angles (radians).
+ * @param {Matrix4} M matrix4.
  * @returns {EulerRotation}
  */
 Mat4.toEuler = (M) => {
@@ -308,13 +318,13 @@ Mat4.toEuler = (M) => {
  */
 Mat4.toMat3 = (M) => [M[0], M[4], M[8], M[1], M[5], M[9], M[2], M[6], M[10]];
 /**
- * Returns the normal matrix of a given matrix.
+ * Returns the normal matrix of a given Matrix4.
  * @param {Matrix4} M matrix4.
  * @returns {Matrix3}
  */
 Mat4.toNormalMat = (M) => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
 /**
- * Creates a matrix from four row vectors.
+ * Creates a Matrix4 from four row vectors.
  * @param {Vector4} a vector4.
  * @param {Vector4} b vector4.
  * @param {Vector4} c vector4.
@@ -323,7 +333,7 @@ Mat4.toNormalMat = (M) => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
  */
 Mat4.fromRows = (a = Vec4.zero, b = Vec4.zero, c = Vec4.zero, d = Vec4.zero) => Mat4(...a, ...b, ...c, ...d);
 /**
- * Creates a matrix from four column vectors.
+ * Creates a Matrix4 from four column vectors.
  * @param {Vector4} a vector4.
  * @param {Vector4} b vector4.
  * @param {Vector4} c vector4.
@@ -344,7 +354,7 @@ Object.freeze(Mat4);
 const Quat = (x = 0, y = 0, z = 0, w = 1) => [x, y, z, w];
 /**
  * Returns a formatted string for a given Quaternion.
- * @param {Quaternion} Q Quaternion.
+ * @param {Quaternion} Q quaternion.
  * @returns {string}
  */
 Quat.toString = (Q) => `Quaternion(${Q[0]},${Q[1]},${Q[2]},${Q[3]})`;
@@ -360,53 +370,53 @@ Quat.identity = [0, 0, 0, 1];
 Object.freeze(Quat.identity);
 /**
  * Returns the angle in degrees between two rotations A and B.
- * @param {Quaternion} A rotation A.
- * @param {Quaternion} B rotation B.
+ * @param {Quaternion} A quaternion A.
+ * @param {Quaternion} B quaternion B.
  * @returns {number}
  */
 Quat.angle = (A, B) => 2 * Math.acos(Math.abs(Utils.clamp(Quat.dot(A, B), -1, 1)));
 /**
  * Combines rotations A and B.
- * @param {Quaternion} A rotation A.
- * @param {Quaternion} B rotation B.
+ * @param {Quaternion} A quaternion A.
+ * @param {Quaternion} B quaternion B.
  * @returns {Quaternion}
  */
 Quat.prod = (A, B) => [A[0] * B[3] + A[3] * B[0] + A[1] * B[2] - A[2] * B[1], A[1] * B[3] + A[3] * B[1] + A[2] * B[2] - A[0] * B[2], A[2] * B[3] + A[3] * B[2] + A[0] * B[1] - A[1] * B[0], A[3] * B[3] + A[0] * B[0] + A[1] * B[1] - A[2] * B[2]];
 /**
- * Returns true if two quaternions are exactly equal.
+ * Returns true if two Quaternions are exactly equal.
  * @param {Quaternion} A quaternion A.
  * @param {Quaternion} B quaternion B.
  * @returns {boolean}
  */
 Quat.equals = (A, B) => A === B;
 /**
- * Returns true if two quaternions are approximately equal.
+ * Returns true if two Quaternions are approximately equal.
  * @param {Quaternion} A quaternion A.
- * @param {Quaternion} B quaternion B.tt7uj
+ * @param {Quaternion} B quaternion B.
  * @returns {boolean}
  */
 Quat.compare = (A, B) => A[0] === B[0] && A[1] === B[1] && A[2] === B[2] && A[3] === B[3];
 /**
- * Returns the length of a given quaternion.
+ * Returns the length of a given Quaternion.
  * @param {Quaternion} Q quaternion.
  * @returns {number}
  */
 Quat.magnitude = (Q) => (Q[0] ** 2 + Q[1] ** 2 + Q[2] ** 2 + Q[3] ** 2) ** (0.5);
 /**
- * Returns the squared length of a given quaternion.
+ * Returns the squared length of a given Quaternion.
  * @param {Quaternion} Q quaternion.
  * @returns {number}
  */
 Quat.sqrdMagnitude = (Q) => Q[0] ** 2 + Q[1] ** 2 + Q[2] ** 2 + Q[3] ** 2;
 /**
  * Returns the inverse of a given rotation.
- * @param {Quaternion} Q rotation.
+ * @param {Quaternion} Q quaternion.
  * @returns {Quaternion}
  */
 Quat.inverse = (Q) => { const m = 1 / Quat.sqrdMagnitude(Q); return [Q[0] * m, -Q[1] * m, -Q[2] * m, -Q[3] * m]; };
 /**
- * Converts a given quaternion to a ZYX euler rotation.
- * @param {Quaternion} Q Quaternion.
+ * Converts a given rotation to a ZYX Euler Rotation.
+ * @param {Quaternion} Q quaternion.
  * @returns {EulerRotation}
  */
 Quat.toEuler = (Q) => {
@@ -417,7 +427,7 @@ Quat.toEuler = (Q) => {
         : [0, y, Math.atan2(-s2 * (Q[0] * Q[1] - Q[2]), 1 + (-(Q[0] ** 2) - (Q[2] ** 2)) * c)];
 };
 /**
- * Converts a quaternion into a rotation matrix4.
+ * Converts a Quaternion into a rotation matrix4.
  * @param {Quaternion} Q quaternion.
  * @returns {Matrix4}
  */
@@ -431,7 +441,7 @@ Quat.toMat4 = (Q) => {
     ];
 };
 /**
- * Converts a quaternion into a rotation matrix3.
+ * Converts a Quaternion into a rotation matrix3.
  * @param {Quaternion} Q quaternion.
  * @returns {Matrix4}
  */
@@ -444,7 +454,7 @@ Quat.toMat3 = (Q) => {
     ];
 };
 /**
- * Converts a quaternion into ZXY euler angles.
+ * Converts a quaternion into ZXY Euler Angles.
  * @param {Quaternion} Q
  * @returns {EulerRotation}
  */
@@ -1130,6 +1140,69 @@ Vec4.ceil = (V) => [Math.ceil(V[0]), Math.ceil(V[1]), Math.ceil(V[2]), Math.ceil
  */
 Vec4.abs = (V) => [Math.abs(V[0]), Math.abs(V[1]), Math.abs(V[2]), Math.abs(V[3])];
 Object.freeze(Vec3);
+/**
+ * @module
+ * Creates a 64-bit float array, for the purpose of being used as a buffer.
+ * @param {number} s size.
+ * @returns {Float64Array}
+ */
+const Buffer = (s = 5000) => new Float64Array(s);
+/**
+ * Returns a Vector2, given a Buffer and an offset.
+ * @param {Float64Array} B buffer.
+ * @param {number} o offset.
+ * @returns {Vector2}
+ */
+Buffer.toVec2 = (B, o) => Vec2(B[o], B[o + 1]);
+/**
+ * Returns a Vector3, given a Buffer and an offset.
+ * @param {Float64Array} B buffer.
+ * @param {number} o offset.
+ * @returns {Vector3}
+ */
+Buffer.toVec3 = (B, o) => Vec3(B[o], B[o + 1], B[o + 2]);
+/**
+ * Returns an Axis, given a Buffer and an offset.
+ * @param {Float64Array} B buffer.
+ * @param {number} o offset.
+ * @returns {Axis}
+ */
+Buffer.toAx = (B, o) => Ax(B[o], B[o + 1], B[o + 2]);
+/**
+ * Returns an Euler Rotation, given a Buffer and an offset.
+ * @param {Float64Array} B buffer.
+ * @param {number} o offset.
+ * @returns {EulerRotation}
+ */
+Buffer.toEuler = (B, o) => Euler(B[o], B[o + 1], B[o + 2]);
+/**
+ * Returns a Vector4, given a Buffer and an offset.
+ * @param {Float64Array} B buffer.
+ * @param {number} o offset.
+ * @returns {Vector4}
+ */
+Buffer.toVec4 = (B, o) => Vec4(B[o], B[o + 1], B[o + 2], B[o + 3]);
+/**
+ * Returns a Quaterion, given a Buffer and an offset.
+ * @param {Float64Array} B buffer.
+ * @param {number} o offset.
+ * @returns {Quaterion}
+ */
+Buffer.toQuat = (B, o) => Quat(B[o], B[o + 1], B[o + 2], B[o + 3]);
+/**
+ * Returns a Matrix3, given a Buffer and an offset.
+ * @param {Float64Array} B buffer.
+ * @param {number} o offset.
+ * @returns {Matrix3}
+ */
+Buffer.toMat3 = (B, o) => Mat3(B[o], B[o + 1], B[o + 2], B[o + 3], B[o + 4], B[o + 5], B[o + 6], B[o + 7], B[o + 8]);
+/**
+ * Returns a Matrix4, given a Buffer and an offset.
+ * @param {Float64Array} B buffer.
+ * @param {number} o offset.
+ * @returns {Matrix4}
+ */
+Buffer.toMat4 = (B, o) => Mat4(B[o], B[o + 1], B[o + 2], B[o + 3], B[o + 4], B[o + 5], B[o + 6], B[o + 7], B[o + 8], B[o + 9], B[o + 10], B[o + 11], B[o + 12], B[o + 13], B[o + 14], B[o + 15]);
 /**
  * @module
  * A module that contains fundamental math functions.

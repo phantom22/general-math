@@ -5,7 +5,7 @@
  */
 const Mat4 = (a=0,b=0,c=0,d=0,e=0,f=0,g=0,h=0,i=0,j=0,k=0,l=0,m=0,n=0,o=0,p=0): Matrix4 => [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p];
 /**
- * Returns a formatted string for a given matrix.
+ * Returns a formatted string for a given Matrix4.
  * @param {Matrix4} M matrix4.
  * @returns {string}
  */
@@ -17,19 +17,19 @@ Object.freeze(Mat4.identity);
 Mat4.zero = <Matrix4>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 Object.freeze(Mat4.zero);
 /**
- * Returns the determinant of a given matrix.
+ * Returns the determinant of a given Matrix4.
  * @param {Matrix4} M matrix4.
  * @returns {number}
  */
 Mat4.det = (M:Matrix4) => -M[12]*(M[9]*(M[2]*M[7]-M[3]*M[6])-M[10]*(M[1]*M[7]-M[3]*M[5])+M[11]*(M[1]*M[6]-M[2]*M[5]))+M[13]*(M[8]*(M[2]*M[7]-M[3]*M[6])-M[10]*(M[0]*M[7]-M[3]*M[4])+M[11]*(M[0]*M[6]-M[2]*M[4]))-M[14]*(M[8]*(M[1]*M[7]-M[3]*M[5])-M[9]*(M[0]*M[7]-M[3]*M[4])+M[11]*(M[0]*M[5]-M[1]*M[4]))+M[15]*(M[8]*(M[1]*M[6]-M[2]*M[5])-M[9]*(M[0]*M[6]-M[2]*M[4])+M[10]*(M[0]*M[5]-M[1]*M[4]))
 /**
- * Returns the transpose of a given matrix.
+ * Returns the transpose of a given Matrix4.
  * @param {Matrix4} M matrix4. 
  * @returns {Matrix4}
  */
 Mat4.transpose = (A:Matrix4): Matrix4 => [A[0],A[4],A[8],A[12],A[1],A[5],A[9],A[13],A[2],A[6],A[10],A[14],A[3],A[7],A[11],A[15]];
 /**
- * Returns the inverse of a given matrix.
+ * Returns the inverse of a given Matrix4.
  * @param {Matrix4} M matrix4.
  * @returns {Matrix4}
  */
@@ -48,7 +48,7 @@ Mat4.invert = (M:Matrix4): Matrix4 => {
     ]
 };
 /**
- * Checks whether the given matrix is an identity matrix.
+ * Checks whether the given Matrix4 is an identity matrix.
  * @param {Matrix4} M matrix4.
  * @returns {boolean}
  */
@@ -70,21 +70,21 @@ Mat4.prod = (A:Matrix4, B:Matrix4): Matrix4 => {
     ]
 }
 /**
- * Creates a scaling matrix.
- * @param {Matrix4} M Matrix4.
+ * Creates a scaling Matrix4.
+ * @param {Matrix4} M matrix4.
  * @param {Vector3} V Vector3.
  * @returns {Matrix4}
  */
 Mat4.scale = (M:Matrix4, V:Vector3): Matrix4 => [M[0]*V[0],M[1]*V[0],M[2]*V[0],M[3]*V[0],M[4]*V[1],M[5]*V[1],M[6]*V[1],M[7]*V[1],M[8]*V[2],M[9]*V[2],M[10]*V[2],M[11]*V[2],M[12],M[13],M[14],M[15]];
 /**
- * Get a column of the given matrix.
+ * Get a column of the given Matrix4.
  * @param {Matrix4} M matrix4. 
  * @param {number} i column index.
  * @returns {Vector4}
  */
 Mat4.getCol = (M:Matrix4, i:number): Vector4 => [M[i],M[4+i],M[8+i],M[12+i]];
  /**
-  * Get a row of the given matrix.
+  * Get a row of the given Matrix4.
   * @param {Matrix4} M matrix4. 
   * @param {number} i row index.
   * @returns {Vector4}
@@ -94,7 +94,7 @@ Mat4.getRow = (M:Matrix4, i:number): Vector4 => {
     return [M[offs],M[offs+1],M[offs+2],M[offs+3]];
 }
 /**
- * Converts a quaternion into a matrix4.
+ * Converts a Quaternion into a Matrix4.
  * @param {Vector3} p position. 
  * @param {Quaternion} Q quaternion. 
  * @param {Vector3} s scale.
@@ -113,8 +113,8 @@ Mat4.compose = (p:Vector3, Q:Quaternion, s:Vector3): Matrix4 => {
     ]
 };
 /**
- * Converts a rotation matrix4 to ZXY euler angles (radians).
- * @param {Matrix4} M rotation matrix4. 
+ * Converts a rotation Matrix4 to ZXY Euler Angles (radians).
+ * @param {Matrix4} M matrix4. 
  * @returns {EulerRotation}
  */
 Mat4.toEuler = (M:Matrix4): EulerRotation => {
@@ -130,13 +130,13 @@ Mat4.toEuler = (M:Matrix4): EulerRotation => {
  */
 Mat4.toMat3 = (M:Matrix4): Matrix3 => [M[0],M[4],M[8],M[1],M[5],M[9],M[2],M[6],M[10]];
 /**
- * Returns the normal matrix of a given matrix.
+ * Returns the normal matrix of a given Matrix4.
  * @param {Matrix4} M matrix4. 
  * @returns {Matrix3}
  */
 Mat4.toNormalMat = (M:Matrix4): Matrix3 => Mat3.transpose(Mat3.invert(Mat4.toMat3(M)));
 /**
- * Creates a matrix from four row vectors.
+ * Creates a Matrix4 from four row vectors.
  * @param {Vector4} a vector4.
  * @param {Vector4} b vector4.
  * @param {Vector4} c vector4.
@@ -145,7 +145,7 @@ Mat4.toNormalMat = (M:Matrix4): Matrix3 => Mat3.transpose(Mat3.invert(Mat4.toMat
  */
 Mat4.fromRows = (a=Vec4.zero, b=Vec4.zero, c=Vec4.zero, d=Vec4.zero): Matrix4 => Mat4(...a,...b,...c,...d);
 /**
- * Creates a matrix from four column vectors.
+ * Creates a Matrix4 from four column vectors.
  * @param {Vector4} a vector4.
  * @param {Vector4} b vector4.
  * @param {Vector4} c vector4.

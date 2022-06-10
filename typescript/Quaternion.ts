@@ -10,7 +10,7 @@
 const Quat = (x=0,y=0,z=0,w=1): Quaternion => [x,y,z,w];
 /**
  * Returns a formatted string for a given Quaternion.
- * @param {Quaternion} Q Quaternion.
+ * @param {Quaternion} Q quaternion.
  * @returns {string}
  */
 Quat.toString = (Q:Quaternion) => `Quaternion(${Q[0]},${Q[1]},${Q[2]},${Q[3]})`;
@@ -26,53 +26,53 @@ Quat.identity = <Quaternion>[0,0,0,1];
 Object.freeze(Quat.identity);
 /**
  * Returns the angle in degrees between two rotations A and B.
- * @param {Quaternion} A rotation A.
- * @param {Quaternion} B rotation B. 
+ * @param {Quaternion} A quaternion A.
+ * @param {Quaternion} B quaternion B. 
  * @returns {number}
  */
 Quat.angle = (A:Quaternion, B:Quaternion) => 2*Math.acos(Math.abs(Utils.clamp(Quat.dot(A,B),-1,1)));
 /**
  * Combines rotations A and B.
- * @param {Quaternion} A rotation A. 
- * @param {Quaternion} B rotation B.
+ * @param {Quaternion} A quaternion A. 
+ * @param {Quaternion} B quaternion B.
  * @returns {Quaternion} 
  */
 Quat.prod = (A:Quaternion, B:Quaternion): Quaternion => [A[0]*B[3]+A[3]*B[0]+A[1]*B[2]-A[2]*B[1],A[1]*B[3]+A[3]*B[1]+A[2]*B[2]-A[0]*B[2],A[2]*B[3]+A[3]*B[2]+A[0]*B[1]-A[1]*B[0],A[3]*B[3]+A[0]*B[0]+A[1]*B[1]-A[2]*B[2]];
 /**
- * Returns true if two quaternions are exactly equal.
+ * Returns true if two Quaternions are exactly equal.
  * @param {Quaternion} A quaternion A. 
  * @param {Quaternion} B quaternion B.
  * @returns {boolean} 
  */
 Quat.equals = (A:Quaternion, B:Quaternion) => A===B;
 /**
- * Returns true if two quaternions are approximately equal.
+ * Returns true if two Quaternions are approximately equal.
  * @param {Quaternion} A quaternion A. 
- * @param {Quaternion} B quaternion B.tt7uj
+ * @param {Quaternion} B quaternion B.
  * @returns {boolean} 
  */
 Quat.compare = (A:Quaternion, B:Quaternion) => A[0]===B[0]&&A[1]===B[1]&&A[2]===B[2]&&A[3]===B[3];
 /**
- * Returns the length of a given quaternion.
+ * Returns the length of a given Quaternion.
  * @param {Quaternion} Q quaternion. 
  * @returns {number}
  */
 Quat.magnitude = (Q:Quaternion) => (Q[0]**2+Q[1]**2+Q[2]**2+Q[3]**2)**(0.5);
 /**
- * Returns the squared length of a given quaternion.
+ * Returns the squared length of a given Quaternion.
  * @param {Quaternion} Q quaternion. 
  * @returns {number}
  */
 Quat.sqrdMagnitude = (Q:Quaternion) => Q[0]**2+Q[1]**2+Q[2]**2+Q[3]**2;
 /**
  * Returns the inverse of a given rotation.
- * @param {Quaternion} Q rotation.
+ * @param {Quaternion} Q quaternion.
  * @returns {Quaternion}
  */
 Quat.inverse = (Q:Quaternion): Quaternion => { const m=1/Quat.sqrdMagnitude(Q); return [Q[0]*m,-Q[1]*m,-Q[2]*m,-Q[3]*m] };
 /**
- * Converts a given quaternion to a ZYX euler rotation.
- * @param {Quaternion} Q Quaternion. 
+ * Converts a given rotation to a ZYX Euler Rotation.
+ * @param {Quaternion} Q quaternion. 
  * @returns {EulerRotation}
  */
 Quat.toEuler = (Q:Quaternion): EulerRotation => {
@@ -88,7 +88,7 @@ Quat.toEuler = (Q:Quaternion): EulerRotation => {
                 : [0,y,Math.atan2(-s2*(Q[0]*Q[1]-Q[2]),1+(-(Q[0]**2)-(Q[2]**2))*c)];
 }
 /**
- * Converts a quaternion into a rotation matrix4.
+ * Converts a Quaternion into a rotation matrix4.
  * @param {Quaternion} Q quaternion. 
  * @returns {Matrix4}
  */
@@ -104,7 +104,7 @@ Quat.toMat4 = (Q:Quaternion): Matrix4 => {
     ]
 };
 /**
- * Converts a quaternion into a rotation matrix3.
+ * Converts a Quaternion into a rotation matrix3.
  * @param {Quaternion} Q quaternion. 
  * @returns {Matrix4}
  */
@@ -120,7 +120,7 @@ Quat.toMat3 = (Q:Quaternion): Matrix3 => {
     ]
 };
 /**
- * Converts a quaternion into ZXY euler angles.
+ * Converts a quaternion into ZXY Euler Angles.
  * @param {Quaternion} Q 
  * @returns {EulerRotation}
  */

@@ -1,6 +1,6 @@
 /**
  * @module
- * Creates a Vector3 containing the euler angles.
+ * Creates a Vector3 containing the Euler Angles.
  * @param {number} x rotation around x axis.
  * @param {number} y rotation around y axis.
  * @param {number} z rotation around z axis.
@@ -8,7 +8,7 @@
  */
 const Euler = (x=0,y=0,z=0) => <EulerRotation>[x,y,z];
 /**
- * Converts a given ZXY euler rotation to a quaternion.
+ * Converts a given ZXY Euler Rotation to a Quaternion.
  * @param {EulerRotation} E euler rotation. 
  * @returns {Quaternion}
  */
@@ -18,7 +18,7 @@ Euler.toQuat = (E:EulerRotation): Quaternion => {
     return [s1*c2*c3-c1*s2*s3, c1*s2*c3+s1*c2*s3, c1*c2*s3+s1*s2*c3, c1*c2*c3-s1*s2*s3];
 }
 /**
- * Returns a formatted string for a given vector.
+ * Returns a formatted string for a given Euler Rotation.
  * @param {EulerRotation} E euler rotation.
  * @returns {string}
  */

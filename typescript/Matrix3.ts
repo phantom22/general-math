@@ -6,7 +6,7 @@
 const Mat3 = (a=0,b=0,c=0,d=0,e=0,f=0,g=0,h=0,i=0): Matrix3 => [a,b,c,d,e,f,g,h,i];
 
 /**
- * Returns a formatted string for a given matrix.
+ * Returns a formatted string for a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {string}
  */
@@ -18,19 +18,19 @@ Object.freeze(Mat3.identity);
 Mat3.zero = <Matrix3>[0,0,0,0,0,0,0,0,0];
 Object.freeze(Mat3.zero);
 /**
- * Returns the determinant of a given matrix.
+ * Returns the determinant of a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {number}
  */
 Mat3.det = (M:Matrix3) => M[6]*(M[1]*M[5]-M[2]*M[4])-M[7]*(M[0]*M[5]-M[2]*M[3])+M[8]*(M[0]*M[4]-M[1]*M[3]);
 /**
- * Returns the transpose of a given matrix.
+ * Returns the transpose of a given Matrix3.
  * @param {Matrix3} M matrix3. 
  * @returns {Matrix3}
  */
 Mat3.transpose = (M:Matrix3): Matrix3 => [M[0],M[3],M[6],M[1],M[4],M[7],M[2],M[5],M[8]];
 /**
- * Returns the inverse of a given matrix.
+ * Returns the inverse of a given Matrix3.
  * @param {Matrix3} M matrix3.
  * @returns {Matrix3}
  */
@@ -47,7 +47,7 @@ Mat3.invert = (M:Matrix3): Matrix3 => {
     ];
 };
 /**
- * Checks whether the given matrix is an identity matrix.
+ * Checks whether the given Matrix3 is an identity matrix.
  * @param {Matrix3} M matrix3.
  * @returns {boolean}
  */
@@ -68,21 +68,21 @@ Mat3.prod = (A:Matrix3, B:Matrix3): Matrix3 => {
     ];
 }
 /**
- * Creates a scaling matrix.
+ * Creates a scaling Matrix3.
  * @param {Matrix3} M matrix3.
  * @param {Vector2} V vector2.
  * @returns {Matrix3}
  */
 Mat3.scale = (M:Matrix3, V:Vector2) => [M[0]*V[0],M[1]*V[0],M[2]*V[0],M[3]*V[1],M[4]*V[1],M[5]*V[1],M[6],M[7],M[8]];
 /**
- * Get a column of the given matrix.
+ * Get a column of the given Matrix3.
  * @param {Matrix3} M matrix3. 
  * @param {number} i column index.
  * @returns {Vector3}
  */
 Mat3.getCol = (M:Matrix3, i:number): Vector3 => [M[i],M[3+i],M[6+i]];
 /**
- * Get a row of the given matrix.
+ * Get a row of the given Matrix3.
  * @param {Matrix3} M matrix3. 
  * @param {number} i row index.
  * @returns {Vector3}
@@ -92,14 +92,14 @@ Mat3.getRow = (M:Matrix4, i:number): Vector3 => {
     return [M[offs],M[offs+1],M[offs+2]];
 }
 /**
- * Returns the normal matrix of a given matrix.
+ * Returns the normal matrix of a given Matrix3.
  * @param {Matrix3} M matrix3. 
  * @returns {Matrix3}
  */
 Mat3.toNormalMat = (M:Matrix3): Matrix3 => Mat3.transpose(Mat3.invert(M));
 /**
- * Converts a rotation matrix3 to ZXY euler angles (radians).
- * @param {Matrix3} M rotation matrix3. 
+ * Converts a rotation Matrix3 to ZXY Euler Angles (radians).
+ * @param {Matrix3} M matrix3. 
  * @returns {EulerRotation}
  */
 Mat3.toEuler = (M:Matrix3): EulerRotation => {
@@ -109,13 +109,13 @@ Mat3.toEuler = (M:Matrix3): EulerRotation => {
                 : [x,0,Math.atan2(M[3],M[1])];
 };
 /**
- * Converts a 3x3 rotation matrix into a 4x4 one.
+ * Converts a given rotation Matrix3 to Matrix4.
  * @param {Matrix3} M matrix3. 
  * @returns {Matrix4}
  */
 Mat3.toMat4 = (M:Matrix3): Matrix4 => [M[0],M[3],M[6],0,M[1],M[4],M[7],0,M[2],M[5],M[8],0,0,0,0,1];
 /**
- * Creates a matrix from three rows.
+ * Creates a Matrix3 from three row vectors.
  * @param {Vector3} a vector3.
  * @param {Vector3} b vector3.
  * @param {Vector3} c vector3.
@@ -124,7 +124,7 @@ Mat3.toMat4 = (M:Matrix3): Matrix4 => [M[0],M[3],M[6],0,M[1],M[4],M[7],0,M[2],M[
  */
 Mat3.fromRows = (a=Vec3.zero, b=Vec3.zero, c=Vec3.zero): Matrix3 => Mat3(...a,...b,...c);
  /**
-  * Creates a matrix from three columns.
+  * Creates a Matrix3 from three column vectors.
   * @param {Vector3} a vector3.
   * @param {Vector3} b vector3.
   * @param {Vector3} c vector3.
