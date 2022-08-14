@@ -3,7 +3,7 @@
  * @param {number} x first component.
  * @param {number} y second component.
  * @param {number} z third component. 
- * @returns 
+ * @returns {Axis}
  */
 const Ax = (x=0,y=0,z=0): Axis => Vec3.normalize([x,y,z]);
 /**
