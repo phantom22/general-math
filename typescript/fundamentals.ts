@@ -72,3 +72,4 @@ Utils.deg2rad = 1/180*Math.PI;
 /** Constant for easy conversion from radians to degrees. */
 Utils.rad2deg = 1/Math.PI*180;
 Object.freeze(Utils);
+
