@@ -1194,65 +1194,95 @@ Object.freeze(Vec3);
 const Wasm = () => void 0;
 /** Where all wasm modules go. */
 Wasm.imported = {};
+/**
+ * Tries to import a wasm module.
+ * @param {string} moduleName
+ * @param {string} base64
+ * @returns
+ */
 Wasm.fromBase64 = (moduleName, base64) => {
     try {
         const bin = atob(base64), bytes = new Uint8Array(bin.length);
         for (let i = 0; i < bin.length; i++) {
             bytes[i] = bin.charCodeAt(i);
         }
+        Wasm.imported[moduleName] = { sourceCode: bytes };
         return new Promise((resolve, reject) => {
             WebAssembly.instantiate(bytes.buffer, {})
                 .then(v => {
-                Wasm.imported[moduleName] = {};
                 const k = Object.keys(v.instance.exports);
                 for (let i = 0; i < k.length; i++) {
                     const ex = k[i];
-                    // @ts-ignore
                     Wasm.imported[moduleName][ex] = v.instance.exports[ex];
-                    resolve(null);
                 }
+                resolve(moduleName);
             })
                 .catch(e => {
-                console.error(`Couldn't import '${moduleName}'!\n   ${e}`);
-                Wasm.getMemoryView(bytes, e.toString().match(/[0-9]+/g)?.map(Number)[0]);
+                const errByte = e.toString().match(/[0-9]+/g)?.map(Number)[0] || 0;
+                console.error(`Couldn't import '${moduleName}'!\n    ${e}. See below.`);
+                Wasm.memoryView(bytes, errByte);
+                Wasm.imported[moduleName].errByte = errByte;
+                reject(moduleName);
             });
         });
     }
     catch (e) {
-        return Promise.reject(`The module '${moduleName}' was not correctly encoded to base64!`);
+        console.error(`The module '${moduleName}' was not correctly encoded to base64!`);
+        return Promise.reject(moduleName);
     }
 };
+/** A table of all opcodes of the wasm assembly language. */
+Wasm.opcodes = ["unreachable", "nop", "block", "loop", "if", "else", "try", "catch", "throw", "rethrow", "", "end", "br", "br_if", "br_table", "return", "call", "call_indirect", "return_call", "return_call_indirect", "", "", "", "", "delegate", "catch_all", "drop", "select", "select t", "", "", "", "local.get", "local.set", "local.tee", "global.get", "global.set", "table.get", "table.set", "i32.load", "i64.load", "f32.load", "f64.load", "i32.load8_s", "i32.load8_u", "i32.load16_s", "i32.load16_u", "i64.load8_s", "i64.load8_u", "i64.load16_s", "i64.load16_u", "i64.load32_s", "i64.load32_u", "i32.store", "i64.store", "f32.store", "f64.store", "i32.store8", "i32.store16", "i64.store8", "i64.store16", "i64.store32", "memory.size", "memory.grow", "i32.const", "i64.const", "f32.const", "f64.const", "i32.eqz", "i32.eq", "i32.ne", "i32.it_s", "i32.it_u", "i32.gt_s", "i32.gt_u", "i32.le_s", "i32.le_u", "i32.ge_s", "i32.ge_u", "i64.eqz", "i64.eq", "i64.ne", "i64.it_s", "i64.it_u", "i64.gt_s", "i64.gt_u", "i64.le_s", "i64.le_u", "i64.ge_s", "i64.ge_u", "f32.eq", "f32.ne", "f32.it", "f32.gt", "f32.le", "f32.ge", "f64.eq", "f64.ne", "f64.it", "f64.gt", "f64.le", "f64.ge", "i32.clz", "i32.ctz", "i32.popcnt", "i32.add", "i32.sub", "i32.mul", "i32.div_s", "i32.div_u", "i32.rem_s", "i32.rem_u", "i32.and", "i32.or", "i32.xor", "i32.shl", "i32.shr_s", "i32.shr_u", "i32.rotl", "i32.rotr", "i64.clz", "i64.ctz", "i64.popcnt", "i64.add", "i64.sub", "i64.mul", "i64.div_s", "i64.div_u", "i64.rem_s", "i64.rem_u", "i64.and", "i64.or", "i64.xor", "i64.shl", "i64.shr_s", "i64.shr_u", "i64.rotl", "i64.rotr", "f32.abs", "f32.neg", "f32.ceil", "f32.floor", "f32.trunc", "f32.nearest", "f32.sqrt", "f32.add", "f32.sub", "f32.mul", "f32.div", "f32.min", "f32.max", "f32.copysign", "f64.abs", "f64.neg", "f64.ceil", "f64.floor", "f64.trunc", "f64.nearest", "f64.sqrt", "f64.add", "f64.sub", "f64.mul", "f64.div", "f64.min", "f64.max", "f64.copysign", "i32.wrap_i64", "i32.trunc_f32_s", "i32.trunc_f32_u", "i32.trunc_f64_s", "i32.trunc_f64_u", "i64.extend_i32_s", "i64.extend_i32_u", "i64.trunc_f32_s", "i64.trunc_f32_u", "i64.trunc_f64_s", "i64.trunc_f64_u", "f32.convert_i32_s", "f32.convert_i32_u", "f32.convert_i64_s", "f32.convert_i64_u", "f32.demote_f64", "f64.convert_i32_s", "f64.convert_i32_u", "f64.convert_i64_s", "f64.convert_i64_u", "f64.promote_f32", "i32.reinterpret_f32", "i64.reinterpret_f64", "f32.reinterpret_i32", "f64.reinterpret_i64", "i32.extend8_s", "i32.extends16_s", "i64,extend8_s", "i64.extends16_s", "i64.extend32_s", "", "", "", "", "", "", "", "", "", "", "", "ref.null", "ref.is_null", "ref.func", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "**", "SIMD", "", ""];
+Object.freeze(Wasm.opcodes);
 /**
- * Memory view of an array of bytes.
+ * Prints to console the standard memory view of a program.
  * @param {Uint8Array} mem
+ * @param {number} errByte error offset.
  */
-Wasm.getMemoryView = (mem, errorOffset = -1) => {
-    const hex = 16, br = "=".repeat(115) + "\n", err = "color:#ff751a;font-weight:bold;", def = "color:#ffffff;font-weight:normal;";
-    let styles = [def], o = "%c\n" + br + "|  decimal  |  hexad  |    01  02  03  04  05  06  07  08  09  10  11  12  13  14  15  16    |      decoded       |" + "\n" + br;
-    for (let offset = 0; offset < mem.length; offset += hex) {
-        let t = "| ", bytes = Array.from(mem.slice(offset, offset + hex));
+Wasm.memoryView = (mem, errByte = -1) => {
+    const br = "=".repeat(115) + "\n", err = "color:#ff751a;font-weight:bold;", def = "color:#ffffff;font-weight:normal;", format = () => "";
+    let styles = [def], o = "%c\n" + br + "|  decimal  |  hexa   |    01  02  03  04  05  06  07  08  09  10  11  12  13  14  15  16    |        text        |" + "\n" + br;
+    for (let offset = 0; offset < mem.length; offset += 16) {
+        let t = "| ", bytes = Array.from(mem.slice(offset, offset + 16));
         t += offset.toString().padStart(9, " ") + " | "; // decimal offset
-        t += "0x" + offset.toString(hex).padStart(5, "0") + " |    "; // hexadecimal offset
-        let errFlag = false, first = true;
+        t += "0x" + offset.toString(16).padStart(5, "0") + " |    "; // hexadecimal offset
+        const containsErr = errByte > -1 && (offset >= errByte || offset <= errByte && offset + 15 >= errByte), firstErrLine = offset <= errByte && offset + 15 >= errByte;
         t += bytes.map((v, i) => {
-            let _ = "";
-            if (!errFlag && errorOffset !== -1 && offset + i >= errorOffset) {
-                styles.push(err);
-                errFlag = true;
-                _ = "%c";
+            let _ = v.toString(16).padStart(2, "0");
+            if (containsErr && offset + i >= errByte) {
+                if (i === 0 || offset + i === errByte) {
+                    styles.push(err);
+                    _ = "%c" + _;
+                }
+                else if (i === bytes.length - 1) {
+                    styles.push(def);
+                    _ = _ + "%c";
+                }
             }
-            else if (errFlag && i === bytes.length - 1) {
-                styles.push(def);
+            return _;
+        }).join("  ").padEnd(containsErr ? 66 : 62, " ") + "    |  "; // single bytes
+        t += bytes.map((v, i) => {
+            let _ = v > 31 && v < 127 || v > 160 && v !== 173 ? String.fromCharCode(v) : ".";
+            if (containsErr && offset + i >= errByte) {
+                if (i === 0 || offset + i === errByte) {
+                    styles.push(err);
+                    _ = "%c" + _;
+                }
+                else if (i === bytes.length - 1) {
+                    styles.push(def);
+                    _ = _ + "%c";
+                }
             }
-            return _ + v.toString(16).padStart(2, "0") + (errFlag && i === bytes.length - 1 ? "%c" : "");
-        }).join("  ").padEnd(errFlag ? 66 : 62, " ") + "    |  "; // single bytes
-        errFlag = false;
-        t += bytes.map(v => v > 31 && v < 127 || v > 159 ? String.fromCharCode(v) : ".").join("").padEnd(hex, " ") + "  |" + (offset <= errorOffset && offset + 15 >= errorOffset ? "  <---- Something went wrong!" : "") + "\n"; // decoded to string
+            return _;
+        }).join("").padEnd(containsErr ? 20 : 16, " ") + "  |" + (firstErrLine ? "  %c<---- Something went wrong!%c" : "") + "\n"; // decoded to string
+        if (firstErrLine)
+            styles.push(err, def);
         o += t;
     }
     o += br;
     console.log(o, ...styles);
 };
+Object.freeze(Wasm);
 /**
  * @module
  * Creates a 64-bit float array, for the purpose of being used as a buffer.
@@ -1316,6 +1346,80 @@ Buffer.toMat3 = (B, o) => Mat3(B[o], B[o + 1], B[o + 2], B[o + 3], B[o + 4], B[o
  * @returns {Matrix4}
  */
 Buffer.toMat4 = (B, o) => Mat4(B[o], B[o + 1], B[o + 2], B[o + 3], B[o + 4], B[o + 5], B[o + 6], B[o + 7], B[o + 8], B[o + 9], B[o + 10], B[o + 11], B[o + 12], B[o + 13], B[o + 14], B[o + 15]);
+Buffer.dataTypes = {
+    int8: 1,
+    int16: 2,
+    int32: 3,
+    int64: 4,
+    float32: 3,
+    float64: 4,
+    uint8: 1,
+    uint16: 2,
+    uint32: 3,
+    uint64: 4,
+};
+Object.freeze(Buffer.dataTypes);
+Buffer.scanner = class {
+    end;
+    constructor(buffer, checklist, refreshRate = 10) {
+        checklist = checklist.filter(v => v[0] + (Buffer.dataTypes[v[1]] || 0) <= buffer.byteLength);
+        const dw = new DataView(buffer);
+        const br = "=".repeat(62) + "\n";
+        const intervalId = setInterval(() => {
+            let o = [];
+            for (let i = 0; i < checklist.length; i++) {
+                const [offset, type, label] = checklist[i];
+                let t;
+                switch (type) {
+                    case "int8":
+                        t = dw.getInt8(offset);
+                        break;
+                    case "int16":
+                        t = dw.getInt16(offset);
+                        break;
+                    case "int32":
+                        t = dw.getInt32(offset);
+                        break;
+                    case "int64":
+                        t = dw.getBigInt64(offset);
+                        break;
+                    case "float32":
+                        t = dw.getFloat32(offset);
+                        break;
+                    case "float64":
+                        t = dw.getFloat64(offset);
+                        break;
+                    case "uint8":
+                        t = dw.getUint8(offset);
+                        break;
+                    case "uint16":
+                        t = dw.getUint16(offset);
+                        break;
+                    case "uint32":
+                        t = dw.getUint32(offset);
+                        break;
+                    case "uint64":
+                        t = dw.getBigUint64(offset);
+                        break;
+                    default:
+                        t = -Infinity;
+                        break;
+                }
+                o.push("| " + (label ? label.slice(0, 10).padEnd(12, ".") : "var").padStart(12, " ") + " | " + offset.toString().padStart(6, " ") + " | " + t.toString().padStart(23, " ") + " | " + type.padStart(8, " ") + " |");
+            }
+            console.clear();
+            console.log(br + "|    label     |  offs  |          value          |   type   |\n" + br + o.join("\n") + "\n" + br);
+        }, 1000 / refreshRate);
+        this.end = function () {
+            console.clear();
+            clearInterval(intervalId);
+        };
+    }
+};
+Buffer.viewSnapshot = (b) => {
+    const a = new Uint8Array(b);
+    Wasm.memoryView(a);
+};
 /**
  * @module
  * A module that contains fundamental math functions.
