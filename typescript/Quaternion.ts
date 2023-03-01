@@ -57,7 +57,7 @@ Quat.compare = (A:Quaternion, B:Quaternion) => A[0]===B[0]&&A[1]===B[1]&&A[2]===
  * @param {Quaternion} Q quaternion. 
  * @returns {number}
  */
-Quat.magnitude = (Q:Quaternion) => (Q[0]**2+Q[1]**2+Q[2]**2+Q[3]**2)**(0.5);
+Quat.magnitude = (Q:Quaternion) => Math.hypot(Q[0],Q[1],Q[2],Q[3]);
 /**
  * Returns the squared length of a given Quaternion.
  * @param {Quaternion} Q quaternion. 
