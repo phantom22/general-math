@@ -511,6 +511,31 @@ Registry.generateUUID = (v) => {
     return uuid;
 };
 Object.freeze(Registry);
+const Formatting = () => void 0;
+Formatting.padStart = (s, targetLength, char) => {
+    let t = "";
+    for (let i = 0; i < (targetLength - s.length); i++) {
+        t += char;
+    }
+    return t + s;
+};
+Formatting.padEnd = (s, targetLength, char) => {
+    let t = "";
+    for (let i = 0; i < (targetLength - s.length); i++) {
+        t += char;
+    }
+    return s + t;
+};
+/**
+ * Clamps the length of a string.
+ * @param {string} s string to crop.
+ * @param {number} maxLength
+ * @returns
+ */
+Formatting.crop = (s, maxLength) => {
+    maxLength = Math.max(maxLength, 3);
+    return s.length > maxLength ? s.slice(0, maxLength - 3) + "..." : s;
+};
 /**
  * @module
  * Creates A 2D vector.
@@ -617,7 +642,7 @@ Vec2.div = (V, s) => { const t = 1 / s; return [V[0] * t, V[1] * t]; };
  * @param {Vector2} V vector2.
  * @returns {number}
  */
-Vec2.magnitude = (V) => (V[0] ** 2 + V[1] ** 2) ** (1 / 2);
+Vec2.magnitude = (V) => Math.hypot(V[0], V[1]);
 /**
  * Returns the squared length of a given vector.
  * @param {Vector2} V vector2.
@@ -636,7 +661,7 @@ Vec2.normalize = (V) => { const t = 1 / Vec2.magnitude(V); return [V[0] * t, V[1
  * @param {Vector2} B vector2 B.
  * @returns {number}
  */
-Vec2.distance = (A, B) => ((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2) ** (1 / 2);
+Vec2.distance = (A, B) => Math.hypot(A[0] - B[0], A[1] - B[1]);
 /**
  * Cross Product of two vectors.
  * @param {Vector2} A vector2 A.
@@ -843,7 +868,7 @@ Vec3.div = (V, s) => { const t = 1 / s; return [V[0] * t, V[1] * t, V[2] * t]; }
  * @param {Vector3} V vector3.
  * @returns {number}
  */
-Vec3.magnitude = (V) => (V[0] ** 2 + V[1] ** 2 + V[2] ** 2) ** (1 / 2);
+Vec3.magnitude = (V) => Math.hypot(V[0], V[1], V[2]);
 /**
  * Returns the squared length of a given vector.
  * @param {Vector3} V vector3.
@@ -862,7 +887,7 @@ Vec3.normalize = (V) => { const t = 1 / Vec3.magnitude(V); return [V[0] * t, V[1
  * @param {Vector3} B vector3 B.
  * @returns {number}
  */
-Vec3.distance = (A, B) => ((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2 + (A[2] - B[2]) ** 2) ** (1 / 2);
+Vec3.distance = (A, B) => Math.hypot(A[0] - B[0], A[1] - B[1], A[2] - B[2]);
 /**
  * Cross Product of two vectors.
  * @param {Vector3} A vector3 A.
@@ -1079,7 +1104,7 @@ Vec4.div = (V, s) => { const t = 1 / s; return [V[0] * t, V[1] * t, V[2] * t, V[
  * @param {Vector4} V vector4.
  * @returns {number}
  */
-Vec4.magnitude = (V) => (V[0] ** 2 + V[1] ** 2 + V[2] ** 2 + V[3] ** 2) ** (1 / 2);
+Vec4.magnitude = (V) => Math.hypot(V[0], V[1], V[2], V[3]);
 /**
  * Returns the squared length of a given vector.
  * @param {Vector4} V vector4.
@@ -1098,7 +1123,7 @@ Vec4.normalize = (V) => { const t = 1 / Vec4.magnitude(V); return [V[0] * t, V[1
  * @param {Vector4} B vector4 B.
  * @returns {number}
  */
-Vec4.distance = (A, B) => ((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2 + (A[2] - B[2]) ** 2 + (A[3] - B[3]) ** 2) ** (1 / 2);
+Vec4.distance = (A, B) => Math.hypot(A[0] - B[0], A[1] - B[1], A[2] - B[2], A[3] - B[3]);
 /**
  * Gets the unsigned angle in radians between A and B.
  * @param {Vector4} A vector4 A.

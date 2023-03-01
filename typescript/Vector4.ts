@@ -118,7 +118,7 @@ Vec4.div = (V:Vector4, s:number): Vector4 => { const t=1/s; return [V[0]*t, V[1]
  * @param {Vector4} V vector4.
  * @returns {number}
  */
-Vec4.magnitude = (V:Vector4) => (V[0]**2+V[1]**2+V[2]**2+V[3]**2)**(1/2);
+Vec4.magnitude = (V:Vector4) => Math.hypot(V[0],V[1],V[2],V[3]);
 /**
  * Returns the squared length of a given vector.
  * @param {Vector4} V vector4.
@@ -137,7 +137,7 @@ Vec4.normalize = (V:Vector4): Vector4 => { const t=1/Vec4.magnitude(V); return [
  * @param {Vector4} B vector4 B. 
  * @returns {number}
  */
-Vec4.distance = (A:Vector4, B:Vector4) => ((A[0]-B[0])**2 + (A[1]-B[1])**2 + (A[2]-B[2])**2 + (A[3]-B[3])**2)**(1/2);
+Vec4.distance = (A:Vector4, B:Vector4) => Math.hypot(A[0]-B[0],A[1]-B[1],A[2]-B[2],A[3]-B[3]);
 /**
  * Gets the unsigned angle in radians between A and B.
  * @param {Vector4} A vector4 A.

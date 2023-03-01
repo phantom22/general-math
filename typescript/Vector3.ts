@@ -111,7 +111,7 @@ Vec3.div = (V:Vector3, s:number): Vector3 => { const t=1/s; return [V[0]*t, V[1]
  * @param {Vector3} V vector3.
  * @returns {number}
  */
-Vec3.magnitude = (V:Vector3) => (V[0]**2+V[1]**2+V[2]**2)**(1/2);
+Vec3.magnitude = (V:Vector3) => Math.hypot(V[0],V[1],V[2]);
 /**
  * Returns the squared length of a given vector.
  * @param {Vector3} V vector3.
@@ -130,7 +130,7 @@ Vec3.normalize = (V:Vector3): Vector3 => { const t=1/Vec3.magnitude(V); return [
  * @param {Vector3} B vector3 B. 
  * @returns {number}
  */
-Vec3.distance = (A:Vector3, B:Vector3) => ((A[0]-B[0])**2 + (A[1]-B[1])**2 + (A[2]-B[2])**2)**(1/2);
+Vec3.distance = (A:Vector3, B:Vector3) => Math.hypot(A[0]-B[0],A[1]-B[1],A[2]-B[2]);
 /**
  * Cross Product of two vectors.
  * @param {Vector3} A vector3 A.
